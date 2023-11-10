@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "138130649234",
+    "project_id": "roomie-65558",
+    "storage_bucket": "roomie-65558.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:138130649234:android:25519e469f64948bb4764b",
+        "android_client_info": {
+          "package_name": "lwamzeche.com.roomie_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGF3wLBbkqFaIajBUhk3XeyFV3vQG2Zsc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
