@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import '../UI/sleep_habit.dart';
+import 'list_chat.dart';
 import 'main_page.dart';
 
 class MyProfilePage extends StatefulWidget {
@@ -44,16 +45,25 @@ class _MyProfilePageState extends State<MyProfilePage> {
 
     if (index == 0) {
       // Home
-      Navigator.pushReplacementNamed(
-          context, '/home'); // Use the named route for your home screen
+      Navigator.pushReplacement(
+        // Use pushReplacement to avoid building a large stack of pages
+        context,
+        MaterialPageRoute(
+            builder: (context) => MainPage()), // Navigate to MyProfilePage
+      );
+      // Navigator.pushReplacementNamed(
+      //     context, '/home'); // Use the named route for your home screen
     } else if (index == 2) {
       // Chats
-      Navigator.pushReplacementNamed(
-          context, '/Chats'); // Use the named route for your chats screen
+      Navigator.pushReplacement(
+        // Use pushReplacement to avoid building a large stack of pages
+        context,
+        MaterialPageRoute(
+            builder: (context) => MyChatsScreen()), // Navigate to MyProfilePage
+      ); // Use the named route for your chats screen
     } else if (index == 3) {
       // Profile
       // Here we are already in profile, so we may not want to push the screen again
-      // This is just a placeholder if you have a different profile screen to navigate to
       Navigator.pushReplacementNamed(context, '/profile');
     }
     // Handle other indices if there are other screens

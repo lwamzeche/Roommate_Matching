@@ -1,29 +1,47 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
-import 'dart:io';
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, use_key_in_widget_constructors, library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'chat.dart'; // Make sure this import points to your chat screen file
+import 'chat.dart';
+import 'main_page.dart';
+import 'my_profile.dart';
 
-class MyChatsScreen extends StatelessWidget {
-  int _selectedIndex = 2;
+class MyChatsScreen extends StatefulWidget {
+  @override
+  _MyChatsScreenState createState() => _MyChatsScreenState();
+}
+
+class _MyChatsScreenState extends State<MyChatsScreen> {
+  int _selectedIndex = 2; // Assuming index 2 is 'Chats'
 
   void _onNavBarTapped(int index) {
+    if (_selectedIndex == index) {
+      return;
+    }
+
     setState(() {
       _selectedIndex = index;
     });
 
-    // Assuming 'Home' is at index 0 and 'Profile' is at index 3
+    // Navigate based on the index tapped
     switch (index) {
-      case 0: // Home
-        Navigator.pushReplacementNamed(context, '/home');
+      case 0:
+        // Navigate to home
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => MainPage()),
+        );
         break;
-      case 3: // Profile
-        Navigator.pushReplacementNamed(context, '/profile');
+      case 3:
+        // Navigate to profile
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => MyProfilePage()),
+        );
         break;
-      // Handle other indices, such as navigation to the current 'Chats' screen or 'Matches', if necessary
-      // No default navigation is needed for the current 'Chats' screen
+      default:
+        // Handle other tabs if necessary
+        break;
     }
   }
 

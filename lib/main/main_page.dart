@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
+import 'package:roomie_project/main/list_chat.dart';
 import 'package:roomie_project/main/my_profile.dart';
 
 class MyApp extends StatelessWidget {
@@ -69,6 +70,14 @@ class _MainPageState extends State<MainPage> {
         context,
         MaterialPageRoute(
             builder: (context) => MainPage()), // Navigate to MyProfilePage
+      );
+    } else if (index == 2) {
+      // Assuming 'Home' is the first item in the BottomNavigationBar
+      Navigator.pushReplacement(
+        // Use pushReplacement to avoid building a large stack of pages
+        context,
+        MaterialPageRoute(
+            builder: (context) => MyChatsScreen()), // Navigate to MyProfilePage
       );
     } else if (index == 3) {
       Navigator.pushReplacement(
