@@ -12,6 +12,8 @@ class MyProfilePage extends StatefulWidget {
 }
 
 class _MyProfilePageState extends State<MyProfilePage> {
+  int _selectedIndex = 3;
+
   final _nameController = TextEditingController(text: "Lily Evans, 22 yrs");
   final _majorController = TextEditingController(text: "Industrial Design");
   final _bioController = TextEditingController(
@@ -29,44 +31,53 @@ class _MyProfilePageState extends State<MyProfilePage> {
   }
 
   Future<void> _chooseImage() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
+    final XFile? pickedFile =
+        await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
       setState(() {
-        _image = File(image.path);
+        _image = File(pickedFile.path); // Explicitly cast to File here
       });
     }
   }
 
   void _onNavBarTapped(int index) {
+    if (_selectedIndex == index) {
+      return;
+    }
+
     setState(() {
-      // Update the selected index here if you want to keep the BottomNavigationBar in sync
-      // _selectedIndex = index;
+      _selectedIndex = index;
     });
 
-    if (index == 0) {
-      // Home
-      Navigator.pushReplacement(
-        // Use pushReplacement to avoid building a large stack of pages
-        context,
-        MaterialPageRoute(
-            builder: (context) => MainPage()), // Navigate to MyProfilePage
-      );
-      // Navigator.pushReplacementNamed(
-      //     context, '/home'); // Use the named route for your home screen
-    } else if (index == 2) {
-      // Chats
-      Navigator.pushReplacement(
-        // Use pushReplacement to avoid building a large stack of pages
-        context,
-        MaterialPageRoute(
-            builder: (context) => MyChatsScreen()), // Navigate to MyProfilePage
-      ); // Use the named route for your chats screen
-    } else if (index == 3) {
-      // Profile
-      // Here we are already in profile, so we may not want to push the screen again
-      Navigator.pushReplacementNamed(context, '/profile');
+    // Navigate based on the index tapped
+    switch (index) {
+      case 0:
+        // Navigate to home
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => MainPage()),
+        );
+        break;
+      case 2:
+        // Navigate to profile
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => MyChatsScreen()),
+        );
+        break;
+      default:
+        // Handle other tabs if necessary
+        break;
     }
-    // Handle other indices if there are other screens
+  }
+
+  ImageProvider<Object> _getImage() {
+    if (_image != null) {
+      return FileImage(_image!); // Use FileImage with the File object
+    } else {
+      return AssetImage(
+          'assets/Roomie/avatar.png'); // Fallback to a placeholder image
+    }
   }
 
   @override
@@ -99,16 +110,13 @@ class _MyProfilePageState extends State<MyProfilePage> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              SizedBox(
-                  height: MediaQuery.of(context).size.height *
-                      0.1), // Adds space at the top, adjust the multiplier as needed
+              SizedBox(height: MediaQuery.of(context).size.height * 0.1),
               GestureDetector(
                 onTap: _chooseImage,
                 child: CircleAvatar(
                   radius: 60,
-                  backgroundImage: _image != null
-                      ? FileImage(_image!) as ImageProvider
-                      : AssetImage('assets/Roomie/Michelle Choi.jpg'),
+                  backgroundImage: _getImage(),
+                  backgroundColor: Colors.grey[200],
                 ),
               ),
               SizedBox(height: 16),

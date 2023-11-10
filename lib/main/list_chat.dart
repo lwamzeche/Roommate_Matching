@@ -83,7 +83,7 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                   backgroundImage: NetworkImage(chat['avatarUrl']),
                 ),
                 title: Text(chat['name']),
-                subtitle: Text(chat['lastMessage']),
+                // subtitle: Text(chat['lastMessage']),
                 trailing: Text(chat['timestamp']),
                 onTap: () {
                   Navigator.push(
