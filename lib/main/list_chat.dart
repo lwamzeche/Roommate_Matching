@@ -74,23 +74,24 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
             itemCount: chatData.length,
             separatorBuilder: (context, index) => Divider(),
             itemBuilder: (context, index) {
-              final chat = chatData[index];
+              final DocumentSnapshot chatDocument = snapshot.data!.docs[index];
+              final Map<String, dynamic> chat =
+                  chatDocument.data() as Map<String, dynamic>;
+
               return ListTile(
                 leading: CircleAvatar(
-                  // Use a placeholder image if the URL is not available
-                  backgroundImage: NetworkImage(
-                      chat['avatarUrl'] ?? 'https://via.placeholder.com/150'),
+                  backgroundImage: NetworkImage(chat['avatarUrl']),
                 ),
-                title: Text(chat['name'] ?? 'No Name'),
-                subtitle: Text(chat['lastMessage'] ?? 'No Last Message'),
-                trailing: chat['unreadCount'] != 0
-                    ? CircleAvatar(child: Text(chat['unreadCount'].toString()))
-                    : null,
+                title: Text(chat['name']),
+                subtitle: Text(chat['lastMessage']),
+                trailing: Text(chat['timestamp']),
                 onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ChatScreen(chatId: chat['id']),
+                      builder: (context) => ChatScreen(
+                          chatId: chatDocument
+                              .id), // Assuming chatDocument.id is the chat ID used to open the chat room
                     ),
                   );
                 },
