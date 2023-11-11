@@ -1,4 +1,5 @@
-// ignore_for_file: use_key_in_widget_constructors, prefer_const_literals_to_create_immutables, prefer_const_constructors, library_private_types_in_public_api
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -14,11 +15,9 @@ class MyProfilePage extends StatefulWidget {
 class _MyProfilePageState extends State<MyProfilePage> {
   int _selectedIndex = 3;
 
-  final _nameController = TextEditingController(text: "Lily Evans, 22 yrs");
-  final _majorController = TextEditingController(text: "Industrial Design");
-  final _bioController = TextEditingController(
-      text:
-          "Hey there! I’m Lily, a software engineer enthusiast with a passion for exploring the world. Originally from Suwon, I recently moved to Daejeon to study at KAIST. I’m cheerful and outgoing person who values a balance between work and play.");
+  final _nameController = TextEditingController();
+  final _majorController = TextEditingController();
+  final _bioController = TextEditingController();
   File? _image;
   final ImagePicker _picker = ImagePicker();
 
@@ -35,7 +34,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
         await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
-        _image = File(pickedFile.path); // Explicitly cast to File here
+        _image = File(pickedFile.path);
       });
     }
   }
@@ -49,34 +48,25 @@ class _MyProfilePageState extends State<MyProfilePage> {
       _selectedIndex = index;
     });
 
-    // Navigate based on the index tapped
     switch (index) {
       case 0:
-        // Navigate to home
         Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => MainPage()),
-        );
+            context, MaterialPageRoute(builder: (context) => MainPage()));
         break;
       case 2:
-        // Navigate to profile
         Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => MyChatsScreen()),
-        );
+            context, MaterialPageRoute(builder: (context) => MyChatsScreen()));
         break;
       default:
-        // Handle other tabs if necessary
         break;
     }
   }
 
   ImageProvider<Object> _getImage() {
     if (_image != null) {
-      return FileImage(_image!); // Use FileImage with the File object
+      return FileImage(_image!);
     } else {
-      return AssetImage(
-          'assets/Roomie/avatar.png'); // Fallback to a placeholder image
+      return AssetImage('assets/Roomie/avatar.png');
     }
   }
 
@@ -84,33 +74,25 @@ class _MyProfilePageState extends State<MyProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Image.asset('assets/Roomie/LOGO.png',
-            height: 30), // Replace with your assets image path
+        title: Image.asset('assets/Roomie/LOGO.png', height: 30),
         backgroundColor: Colors.white,
         elevation: 0,
-        actions: [
-          Expanded(
-            // Use Expanded widget to push the logo to the right
-            child: Align(
-              alignment: Alignment.topRight,
-              child: Image.asset('assets/Roomie/LOGO.png',
-                  height: 30), // Your asset image path
-            ),
-          ),
-          TextButton(
-            onPressed: () {
-              // TODO: Implement navigation to edit profile
-            },
-            child: Text('Edit', style: TextStyle(color: Colors.blue)),
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: () {
+                    // TODO: Implement navigation to edit profile
+                  },
+                  child: Text('Edit', style: TextStyle(color: Colors.blue)),
+                ),
+              ),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.05),
               GestureDetector(
                 onTap: _chooseImage,
                 child: CircleAvatar(
@@ -120,13 +102,20 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 ),
               ),
               SizedBox(height: 16),
-              Text(
-                _nameController.text,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              TextField(
+                controller: _nameController,
+                decoration: InputDecoration(
+                  labelText: 'Name and Age',
+                  border: OutlineInputBorder(),
+                ),
               ),
-              Text(
-                _majorController.text,
-                style: TextStyle(fontSize: 16, color: Colors.grey),
+              SizedBox(height: 8),
+              TextField(
+                controller: _majorController,
+                decoration: InputDecoration(
+                  labelText: 'Major',
+                  border: OutlineInputBorder(),
+                ),
               ),
               SizedBox(height: 16),
               Align(
@@ -137,19 +126,22 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 ),
               ),
               SizedBox(height: 8),
-              Text(
-                _bioController.text,
-                style: TextStyle(fontSize: 16),
+              TextField(
+                controller: _bioController,
+                decoration: InputDecoration(
+                  labelText: 'Bio',
+                  border: OutlineInputBorder(),
+                ),
+                maxLines: null,
+                keyboardType: TextInputType.multiline,
               ),
               SizedBox(height: 16),
               Align(
                 alignment: Alignment.centerLeft,
                 child: InkWell(
                   onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                          builder: (context) => SleepHabitScreen()),
-                    );
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => SleepHabitScreen()));
                   },
                   child: Text(
                     'Retake tests',
@@ -164,7 +156,6 @@ class _MyProfilePageState extends State<MyProfilePage> {
           ),
         ),
       ),
-      // Bottom navigation remains the same...
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.blue,

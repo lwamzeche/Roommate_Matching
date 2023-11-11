@@ -1,10 +1,11 @@
 // ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_const_constructors_in_immutables
-
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
 import 'package:roomie_project/main/list_chat.dart';
 import 'package:roomie_project/main/my_profile.dart';
+
+import 'matches.dart';
 
 class MyApp extends StatelessWidget {
   @override
@@ -70,6 +71,14 @@ class _MainPageState extends State<MainPage> {
         context,
         MaterialPageRoute(
             builder: (context) => MainPage()), // Navigate to MyProfilePage
+      );
+    } else if (index == 1) {
+      // Assuming 'Home' is the first item in the BottomNavigationBar
+      Navigator.pushReplacement(
+        // Use pushReplacement to avoid building a large stack of pages
+        context,
+        MaterialPageRoute(
+            builder: (context) => MatchesPage()), // Navigate to MyProfilePage
       );
     } else if (index == 2) {
       // Assuming 'Home' is the first item in the BottomNavigationBar
