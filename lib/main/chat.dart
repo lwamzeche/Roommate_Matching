@@ -20,13 +20,33 @@ class _ChatScreenState extends State<ChatScreen> {
     final String messageText = _messageController.text.trim();
     if (messageText.isNotEmpty) {
       // Push the message to Firestore
-      _firestore.collection('chats/${widget.chatId}/messages').add({
+      DocumentReference messageRef =
+          _firestore.collection('chats/${widget.chatId}/messages').doc();
+
+      // Start a batch write for atomic operations
+      WriteBatch batch = _firestore.batch();
+
+      // Add the new message
+      batch.set(messageRef, {
         'text': messageText,
-        'senderId':
-            'yourUserId', // Replace with the actual sender ID from your auth system
-        'timestamp':
-            FieldValue.serverTimestamp(), // Sets the server-side timestamp
+        'senderId': 'yourUserId', // Replace with the actual sender ID
+        'timestamp': FieldValue.serverTimestamp(), // Server-side timestamp
       });
+
+      // Update the last message in the chat metadata
+      batch.set(
+        _firestore.collection('chats').doc(widget.chatId),
+        {
+          'lastMessage': messageText,
+          'lastMessageTimestamp': FieldValue.serverTimestamp(),
+          // Add other necessary metadata like user IDs, etc.
+        },
+        SetOptions(merge: true), // Merge with existing data
+      );
+
+      // Commit the batch
+      batch.commit();
+
       _messageController.clear();
     }
   }

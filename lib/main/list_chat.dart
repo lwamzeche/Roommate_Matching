@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'chat.dart';
 import 'main_page.dart';
+import 'matches.dart';
 import 'my_profile.dart';
 
 class MyChatsScreen extends StatefulWidget {
@@ -31,6 +32,16 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
           context,
           MaterialPageRoute(builder: (context) => MainPage()),
         );
+        break;
+      case 1:
+        // Navigate to matches
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => MatchesPage()),
+        );
+        break;
+      case 2:
+        // We are already on the 'Chats' page, so no action is needed.
         break;
       case 3:
         // Navigate to profile

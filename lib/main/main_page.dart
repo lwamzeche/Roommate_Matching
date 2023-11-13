@@ -194,13 +194,6 @@ class ProfileCard extends StatelessWidget {
                       size: 20,
                     ),
                     SizedBox(width: 8),
-                    Text(
-                      'Match: 95%', // Replace with the dynamic match percentage
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -212,7 +205,7 @@ class ProfileCard extends StatelessWidget {
             left: 0,
             right: 0,
             bottom: screenSize.height *
-                0.08, // Adjust this value as needed to position the blue box
+                0.01, // Adjust this value as needed to position the blue box
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 10.0),
               child: Container(
@@ -279,28 +272,28 @@ class ProfileCard extends StatelessWidget {
           ),
 
           // Like and dislike buttons
-          Positioned(
-            bottom: 0,
-            left: screenSize.width * 0.05,
-            right: screenSize.width * 0.05, // Lower down the buttons
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                FloatingActionButton(
-                  heroTag: "btn1",
-                  onPressed: () {}, // Implement dislike action
-                  backgroundColor: Colors.white,
-                  child: Icon(Icons.close, color: Colors.blue),
-                ),
-                FloatingActionButton(
-                  heroTag: "btn2",
-                  onPressed: () {}, // Implement like action
-                  backgroundColor: Colors.white,
-                  child: Icon(Icons.favorite, color: Colors.blue),
-                ),
-              ],
-            ),
-          ),
+          // Positioned(
+          //   bottom: 0,
+          //   left: screenSize.width * 0.05,
+          //   right: screenSize.width * 0.05, // Lower down the buttons
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+          //     children: [
+          //       FloatingActionButton(
+          //         heroTag: "btn1",
+          //         onPressed: () {}, // Implement dislike action
+          //         backgroundColor: Colors.white,
+          //         child: Icon(Icons.close, color: Colors.blue),
+          //       ),
+          //       FloatingActionButton(
+          //         heroTag: "btn2",
+          //         onPressed: () {}, // Implement like action
+          //         backgroundColor: Colors.white,
+          //         child: Icon(Icons.favorite, color: Colors.blue),
+          //       ),
+          //     ],
+          //   ),
+          // ),
         ],
       ),
     );
