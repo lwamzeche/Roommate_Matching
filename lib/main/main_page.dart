@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
 import 'package:roomie_project/main/list_chat.dart';
 import 'package:roomie_project/main/my_profile.dart';
-
+import 'package:roomie_project/main/view_profile.dart';
 import 'matches.dart';
 
 class MyApp extends StatelessWidget {
@@ -204,8 +204,15 @@ class ProfileCard extends StatelessWidget {
           Positioned(
             left: 0,
             right: 0,
-            bottom: screenSize.height *
-                0.0021, // Adjust this value as needed to position the blue box
+            bottom: screenSize.height * 0.0021, // Adjust this value as needed to position the blue box
+            child: GestureDetector(
+                onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ViewProfilePage(userProfile: profile),
+                  ),
+                );
+            }, 
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 10.0),
               child: Container(
@@ -268,6 +275,7 @@ class ProfileCard extends StatelessWidget {
                   ],
                 ),
               ),
+            ),
             ),
           ),
 
