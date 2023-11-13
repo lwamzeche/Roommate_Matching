@@ -26,6 +26,9 @@ class _GenderScreenState extends State<GenderScreen> {
         actions: <Widget>[
           TextButton(
             onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => ProgramScreen()),
+              );
               // TODO: Implement skip functionality
             },
             child: Text(

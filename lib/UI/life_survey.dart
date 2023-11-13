@@ -37,6 +37,9 @@ class _LifestyleSurveyScreenState extends State<LifestyleSurveyScreen> {
           TextButton(
             onPressed: () {
               // Handle skip action
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => SleepHabitScreen()),
+              );
             },
             child: Text('Skip', style: TextStyle(color: Colors.blue)),
           ),

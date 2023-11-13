@@ -27,7 +27,7 @@ class _ProgramScreenState extends State<ProgramScreen> {
           TextButton(
             onPressed: () {
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => ProgramScreen()),
+                MaterialPageRoute(builder: (context) => DormitoryScreen()),
               );
             },
             child: Text(

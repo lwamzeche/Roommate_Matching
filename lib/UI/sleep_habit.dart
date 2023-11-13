@@ -63,6 +63,9 @@ class _SleepHabitScreenState extends State<SleepHabitScreen> {
           TextButton(
             onPressed: () {
               // TODO: Handle skip action
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => SmokingHabits()),
+              );
             },
             child: Text('Skip', style: TextStyle(color: Colors.black)),
           ),

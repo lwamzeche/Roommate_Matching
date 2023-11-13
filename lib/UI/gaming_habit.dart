@@ -62,6 +62,10 @@ class _GamingHabitsState extends State<GamingHabit> {
           TextButton(
             onPressed: () {
               // TODO: Handle skip action
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                    builder: (context) => TimeInDorm()),
+              );
             },
             child: Text('Skip', style: TextStyle(color: Colors.black)),
           ),
