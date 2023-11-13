@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, use_key_in_widget_constructors, library_private_types_in_public_api
+// ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -13,99 +13,102 @@ class MyChatsScreen extends StatefulWidget {
 }
 
 class _MyChatsScreenState extends State<MyChatsScreen> {
-  int _selectedIndex = 2; // Assuming index 2 is 'Chats'
+  List<ChatEntry> chats = [];
+  int _selectedIndex = 2; // Since the chat page is at index 2
 
-  void _onNavBarTapped(int index) {
-    if (_selectedIndex == index) {
-      return;
-    }
+  @override
+  void initState() {
+    super.initState();
+    loadMatchesAsChats();
+  }
 
+  void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
 
-    // Navigate based on the index tapped
     switch (index) {
       case 0:
-        // Navigate to home
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => MainPage()),
         );
         break;
       case 1:
-        // Navigate to matches
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => MatchesPage()),
         );
         break;
       case 2:
-        // We are already on the 'Chats' page, so no action is needed.
+        // Current index is chat, no action needed
         break;
       case 3:
-        // Navigate to profile
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => MyProfilePage()),
         );
         break;
-      default:
-        // Handle other tabs if necessary
-        break;
     }
+  }
+
+  // This function is called to load all matches as chats
+  void loadMatchesAsChats() {
+    // Assuming you have access to some function that fetches your matches
+    fetchMatches().then((matchList) {
+      setState(() {
+        chats = matchList.map((match) {
+          // Assuming 'match' is a UserProfile object like the one from your MatchesPage
+          return ChatEntry(
+            chatId: match
+                .documentId, // Or any other unique id that represents the chat
+            currentUserId:
+                'yourCurrentUserId', // Replace with the actual current user ID
+            imageUrl: match.imageUrl,
+            name: match.name,
+            lastMessage:
+                'You matched with ${match.name}!', // Placeholder for last message
+          );
+        }).toList();
+      });
+    });
+  }
+
+  Future<List<UserProfile>> fetchMatches() async {
+    // Here you should write the code to fetch the matches from your Firestore collection
+    // For now, let's assume this function returns a list of UserProfiles
+    var firestore = FirebaseFirestore.instance;
+    var querySnapshot = await firestore.collection('userProfiles').get();
+    return querySnapshot.docs
+        .map((doc) => UserProfile.fromSnapshot(doc))
+        .toList();
   }
 
   @override
   Widget build(BuildContext context) {
-    final CollectionReference chatsCollection =
-        FirebaseFirestore.instance.collection('chats');
-
     return Scaffold(
       appBar: AppBar(
         title: Text('My Chats'),
-        // Add other AppBar properties as needed
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: chatsCollection.snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Text('Something went wrong');
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          }
-
-          // Convert the snapshot
-          final chatData = snapshot.data!.docs
-              .map((doc) => doc.data() as Map<String, dynamic>)
-              .toList();
-
-          return ListView.separated(
-            itemCount: chatData.length,
-            separatorBuilder: (context, index) => Divider(),
-            itemBuilder: (context, index) {
-              final DocumentSnapshot chatDocument = snapshot.data!.docs[index];
-              final Map<String, dynamic> chat =
-                  chatDocument.data() as Map<String, dynamic>;
-
-              return ListTile(
-                leading: CircleAvatar(
-                  backgroundImage: NetworkImage(chat['avatarUrl']),
+      body: ListView.builder(
+        itemCount: chats.length,
+        itemBuilder: (context, index) {
+          final chat = chats[index];
+          return ListTile(
+            leading: CircleAvatar(
+              backgroundImage: NetworkImage(chat.imageUrl),
+            ),
+            title: Text(chat.name),
+            subtitle: Text(chat.lastMessage),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ChatScreen(
+                    chatId: chat.chatId,
+                    currentUserId: chat.currentUserId,
+                  ),
                 ),
-                title: Text(chat['name']),
-                // subtitle: Text(chat['lastMessage']),
-                trailing: Text(chat['timestamp']),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ChatScreen(
-                          chatId: chatDocument
-                              .id), // Assuming chatDocument.id is the chat ID used to open the chat room
-                    ),
-                  );
-                },
               );
             },
           );
@@ -116,14 +119,52 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
         selectedItemColor: Colors.blue,
         unselectedItemColor: Colors.grey,
         currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Matches'),
           BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Chats'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
-        onTap: _onNavBarTapped,
       ),
+    );
+  }
+}
+
+class ChatEntry {
+  final String chatId;
+  final String currentUserId;
+  final String imageUrl;
+  final String name;
+  final String lastMessage;
+
+  ChatEntry({
+    required this.chatId,
+    required this.currentUserId,
+    required this.imageUrl,
+    required this.name,
+    required this.lastMessage,
+  });
+}
+
+// Assume UserProfile is defined elsewhere in your project
+class UserProfile {
+  final String documentId;
+  final String imageUrl;
+  final String name;
+
+  UserProfile({
+    required this.documentId,
+    required this.imageUrl,
+    required this.name,
+  });
+
+  factory UserProfile.fromSnapshot(DocumentSnapshot snapshot) {
+    final data = snapshot.data() as Map<String, dynamic>;
+    return UserProfile(
+      documentId: snapshot.id,
+      imageUrl: data['ImageUrl'],
+      name: data['Name'],
     );
   }
 }

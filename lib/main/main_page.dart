@@ -205,7 +205,7 @@ class ProfileCard extends StatelessWidget {
             left: 0,
             right: 0,
             bottom: screenSize.height *
-                0.01, // Adjust this value as needed to position the blue box
+                0.0021, // Adjust this value as needed to position the blue box
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 10.0),
               child: Container(

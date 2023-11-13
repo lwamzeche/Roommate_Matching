@@ -17,11 +17,7 @@ class _MatchesPageState extends State<MatchesPage> {
   late final CollectionReference _userProfiles;
   late final FirebaseFirestore _firestore;
   int _selectedIndex = 1;
-
-  String generateRandomUserId() {
-    var uuid = Uuid();
-    return uuid.v4(); // Generates a random UUID
-  }
+  late final String currentUserId;
 
   final Map<String, String> currentUserPreferences = {
     'sleepingHabit': 'Early bird',
@@ -34,6 +30,8 @@ class _MatchesPageState extends State<MatchesPage> {
     super.initState();
     _firestore = FirebaseFirestore.instance;
     _userProfiles = FirebaseFirestore.instance.collection('userProfiles');
+    super.initState();
+    currentUserId = Uuid().v4();
   }
 
   Stream<List<UserProfile>> _getMatches() {
@@ -118,7 +116,6 @@ class _MatchesPageState extends State<MatchesPage> {
                     'Match: ${matchScore * 33}%'), // Example score calculation
                 trailing: ElevatedButton(
                   onPressed: () {
-                    String currentUserId = generateRandomUserId();
                     String matchedUserId = matches[index].documentId;
                     // This should be the document ID of the matched profile
 
@@ -145,7 +142,8 @@ class _MatchesPageState extends State<MatchesPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ChatScreen(chatId: chatId),
+                          builder: (context) => ChatScreen(
+                              chatId: chatId, currentUserId: currentUserId),
                         ),
                       );
                     });

@@ -6,6 +6,7 @@ import 'dart:io';
 import '../UI/sleep_habit.dart';
 import 'list_chat.dart';
 import 'main_page.dart';
+import 'matches.dart';
 
 class MyProfilePage extends StatefulWidget {
   @override
@@ -20,6 +21,29 @@ class _MyProfilePageState extends State<MyProfilePage> {
   final _bioController = TextEditingController();
   File? _image;
   final ImagePicker _picker = ImagePicker();
+  void _onNavBarTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => MainPage()));
+        break;
+      case 1:
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => MatchesPage()));
+        break;
+      case 2:
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => MyChatsScreen()));
+        break;
+      case 3:
+        // Already on Profile page, no action needed.
+        break;
+    }
+  }
 
   @override
   void dispose() {
@@ -36,29 +60,6 @@ class _MyProfilePageState extends State<MyProfilePage> {
       setState(() {
         _image = File(pickedFile.path);
       });
-    }
-  }
-
-  void _onNavBarTapped(int index) {
-    if (_selectedIndex == index) {
-      return;
-    }
-
-    setState(() {
-      _selectedIndex = index;
-    });
-
-    switch (index) {
-      case 0:
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => MainPage()));
-        break;
-      case 2:
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => MyChatsScreen()));
-        break;
-      default:
-        break;
     }
   }
 
@@ -160,13 +161,14 @@ class _MyProfilePageState extends State<MyProfilePage> {
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.blue,
         unselectedItemColor: Colors.grey,
+        currentIndex: _selectedIndex, // Set the currentIndex to _selectedIndex
+        onTap: _onNavBarTapped,
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Matches'),
           BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Chats'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
-        onTap: _onNavBarTapped,
       ),
     );
   }
