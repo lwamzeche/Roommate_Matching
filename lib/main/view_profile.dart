@@ -26,6 +26,8 @@ class ViewProfilePage extends StatelessWidget {
             Divider(),
             _buildRoommatePreferencesSection(),
             _buildPreferencesSection(),
+            Divider(),
+            _buildRoomieSection(),
           ],
         ),
       ),
@@ -151,5 +153,42 @@ Widget _buildDetailsSection() {
       shape: StadiumBorder(side: BorderSide(color: Colors.blue)),
     );
   }
+
+  Widget _buildRoomieSection() {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: <Widget>[
+      Padding(
+        padding: EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
+        child: Text(
+          "${userProfile.name ?? 'User'}'s Roomie",
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+      ),
+      SizedBox(height: 8), // Space between heading and roomie name
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.0),
+        child: Text(
+          userProfile.roomieName ?? 'Roomie Name',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+      ),
+      SizedBox(height: 8), // Space between roomie name and image
+      userProfile.roomieImage != null 
+        ? Image.network(userProfile.roomieImage!)
+        : SizedBox(height: 200, child: Placeholder()), // Placeholder in case of no image
+      SizedBox(height: 8), // Space between image and roomie bio
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.0),
+        child: Text(
+          userProfile.roomieBio ?? 'Roomie Bio',
+          style: TextStyle(fontSize: 16),
+        ),
+      ),
+    ],
+  );
 }
+
+}
+
 

@@ -55,6 +55,9 @@ class _MainPageState extends State<MainPage> {
         sleepingHabit: data['sleepingHabit'],
         timeInDorm: data['timeInDorm'],
         smokingHabit: data['smokingHabit'],
+        roomieImage: data['roomieImage'],
+        roomieName: data['roomieName'],
+        roomieBio: data['roomieBio'],
       );
     }).toList();
 
@@ -302,6 +305,9 @@ class UserProfile {
   final String? sleepingHabit;
   final String? timeInDorm;
   final String? smokingHabit;
+  final String? roomieImage;
+  final String? roomieName;
+  final String? roomieBio;
 
   UserProfile({
     this.name,
@@ -316,5 +322,8 @@ class UserProfile {
     this.sleepingHabit,
     this.timeInDorm,
     this.smokingHabit,
+    this.roomieImage,
+    this.roomieName,
+    this.roomieBio,
   });
 }
