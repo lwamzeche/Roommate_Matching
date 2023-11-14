@@ -10,11 +10,18 @@ class LoginScreen extends StatelessWidget {
 
   Future<void> _login(BuildContext context) async {
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _emailController.text,
         password: _passwordController.text,
       );
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserTypeScreen()));
+      if (userCredential.user != null) {
+        print('Login successful');
+        print(userCredential.user!.email);
+        print(userCredential.user!.uid);
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => UserTypeScreen(currentUser: userCredential.user!)),
+        );
+      }
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to sign in. Please check your credentials.'))
@@ -123,7 +130,7 @@ class LoginScreen extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => UserTypeScreen()),
+                      MaterialPageRoute(builder: (context) => UserTypeScreen( )),
                     );
                   },
                   style: ElevatedButton.styleFrom(

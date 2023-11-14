@@ -1,12 +1,13 @@
 // ignore_for_file: prefer_const_constructors, avoid_print
-
 import 'package:flutter/material.dart';
 import './gender.dart';
-// Import Firebase if you haven't already
 // import 'package:firebase_core/firebase_core.dart';
-// import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserTypeScreen extends StatefulWidget {
+  final User? currentUser;
+  UserTypeScreen({this.currentUser});
   @override
   _UserTypeScreenState createState() => _UserTypeScreenState();
 }
@@ -15,6 +16,11 @@ class _UserTypeScreenState extends State<UserTypeScreen> {
   String selectedUserType = '';
 
   @override
+  void initState() {
+    super.initState();
+    print("User ID: ${widget.currentUser?.uid}");
+  }
+
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
 

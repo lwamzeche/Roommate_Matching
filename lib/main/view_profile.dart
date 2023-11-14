@@ -219,11 +219,11 @@ Widget _buildLabel(String text) {
       ),
       SizedBox(height: 30), // Space between roomie name and image
       Padding(
-        padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.15),
+        padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.15), 
         child: Text(
           userProfile.roomieBio ?? 'Roomie Bio',
           style: TextStyle(fontSize: 16),
-          textAlign: TextAlign.center,
+          textAlign: TextAlign.center, //currently best way to allign roomie description
         ),
       ),
        SizedBox(height: 10),
