@@ -280,30 +280,6 @@ class ProfileCard extends StatelessWidget {
               ),
             ),
           ),
-
-          // Like and dislike buttons
-          // Positioned(
-          //   bottom: 0,
-          //   left: screenSize.width * 0.05,
-          //   right: screenSize.width * 0.05, // Lower down the buttons
-          //   child: Row(
-          //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-          //     children: [
-          //       FloatingActionButton(
-          //         heroTag: "btn1",
-          //         onPressed: () {}, // Implement dislike action
-          //         backgroundColor: Colors.white,
-          //         child: Icon(Icons.close, color: Colors.blue),
-          //       ),
-          //       FloatingActionButton(
-          //         heroTag: "btn2",
-          //         onPressed: () {}, // Implement like action
-          //         backgroundColor: Colors.white,
-          //         child: Icon(Icons.favorite, color: Colors.blue),
-          //       ),
-          //     ],
-          //   ),
-          // ),
         ],
       ),
     );
