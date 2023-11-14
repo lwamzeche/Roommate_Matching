@@ -119,15 +119,17 @@ Widget _buildDetailsSection() {
   }
 
   Widget _buildRoommatePreferencesSection() {
-  return Row(
+    return Row(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: <Widget>[
       Padding(
-        padding: EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
+        padding: EdgeInsets.only(left: 16.0, top: 16.0),
+        child: Flexible(
         child: Text(
           "${userProfile.name ?? 'User'}'s Preferences in Roommates",
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
+       ),
       ),
       ],
     );
