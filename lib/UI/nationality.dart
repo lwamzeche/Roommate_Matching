@@ -56,7 +56,10 @@ class _NationalityState extends State<Nationality> {
         actions: [
           TextButton(
             onPressed: () {
-              // TODO: Handle skip action
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                    builder: (context) => SurveySuccessScreen()),
+              );
             },
             child: Text('Skip', style: TextStyle(color: Colors.black)),
           ),

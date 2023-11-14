@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'dart:io' show Platform;
 import 'life_survey.dart';
+import 'sleep_habit.dart';
 
 class SurveyScreen extends StatelessWidget {
   @override
@@ -26,17 +27,18 @@ class SurveyScreen extends StatelessWidget {
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              // TODO: Handle skip survey action
-            },
-            child: Text(
-              'Skip',
-              style: TextStyle(color: Colors.blue),
-            ),
-          )
-        ],
+        // actions: [
+        //   TextButton(
+        //     onPressed: () {
+        //       // TODO: Handle skip survey action
+              
+        //     },
+        //     child: Text(
+        //       'Skip',
+        //       style: TextStyle(color: Colors.blue),
+        //     ),
+        //   )
+        // ],
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.1),
@@ -142,6 +144,9 @@ class SurveyScreen extends StatelessWidget {
             OutlinedButton(
               onPressed: () {
                 // TODO: Handle skip survey action
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => SleepHabitScreen()),
+                );
               },
               style: OutlinedButton.styleFrom(
                 foregroundColor: Colors.blue,

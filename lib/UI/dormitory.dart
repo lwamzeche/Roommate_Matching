@@ -26,6 +26,9 @@ class _DormitoryScreenState extends State<DormitoryScreen> {
         actions: <Widget>[
           TextButton(
             onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => MBTIScreen()),
+              );
               // TODO: Implement skip functionality
             },
             child: Text(
