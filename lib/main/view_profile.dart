@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'main_page.dart';
+import 'dart:io' show Platform;
+
 
 class ViewProfilePage extends StatelessWidget {
   final UserProfile userProfile;
+
 
   ViewProfilePage({Key? key, required this.userProfile}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -25,7 +29,7 @@ class ViewProfilePage extends StatelessWidget {
             _buildLabelsSection(),
             Divider(),
             _buildRoomieHeading(),
-             _buildRoomieSection(context),
+             _buildRoomieSection(context, screenSize),
             Divider(),
             _buildRoommatePreferencesSection(),
             _buildPreferencesSection(),
@@ -134,28 +138,47 @@ Widget _buildDetailsSection() {
       ],
     );
   }
-    Widget _buildPreferencesSection() {
-      return Padding(
-        padding: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0, top: 4.0),
-        child: Wrap(
-          spacing: 8.0,
+Widget _buildPreferencesSection() {
+  return Padding(
+    padding: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0, top: 10.0),
+    child: Column(
+      children: <Widget>[
+        Row(
           children: <Widget>[
-            _buildLabel(userProfile.sleepingHabit ?? 'Sleeping Habit'),
-            _buildLabel(userProfile.timeInDorm ?? 'Time in Dorm'),
-            _buildLabel(userProfile.smokingHabit ?? 'Smoking Habit'),
+            Expanded(child: _buildLabel(userProfile.sleepingHabit ?? 'Sleeping Habit')),
+            SizedBox(width: 2), // Space between labels
+            Expanded(child: _buildLabel(userProfile.timeInDorm ?? 'Time in Dorm')),
           ],
         ),
-      );
-    }
+        SizedBox(height: 2), // Space between rows
+        Row(
+          children: <Widget>[
+            Expanded(child: _buildLabel(userProfile.smokingHabit ?? 'Smoking Habit')),
+            SizedBox(width: 2), // Space between labels
+            Expanded(child: _buildLabel(userProfile.userType ?? 'International')),
+          ],
+        ),
+      ],
+    ),
+  );
+}
 
-  Widget _buildLabel(String text) {
-    return Chip(
-      label: Text(text),
-      labelStyle: TextStyle(color: Colors.blue),
-      backgroundColor: Colors.white,
-      shape: StadiumBorder(side: BorderSide(color: Colors.blue)),
-    );
-  }
+
+
+Widget _buildLabel(String text) {
+  return Chip(
+    label: Text(
+      text,
+      style: TextStyle(
+        color: Colors.blue,
+        fontSize: 16, // Increased font size
+      ),
+    ),
+    backgroundColor: Colors.white,
+    shape: StadiumBorder(side: BorderSide(color: Colors.blue)),
+    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+  );
+}
 
   Widget _buildRoomieHeading(){
     return Row (
@@ -172,7 +195,7 @@ Widget _buildDetailsSection() {
     );
   }
 
-  Widget _buildRoomieSection(BuildContext context) {
+  Widget _buildRoomieSection(BuildContext context, Size screenSize) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.center,
     children: <Widget>[
@@ -194,14 +217,15 @@ Widget _buildDetailsSection() {
             )
           : SizedBox(height: 250, child: Placeholder()), 
       ),
-      SizedBox(height: 16), // Space between roomie name and image
+      SizedBox(height: 30), // Space between roomie name and image
       Padding(
-        padding: EdgeInsets.symmetric(horizontal: 40.0),
+        padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.1),
         child: Text(
           userProfile.roomieBio ?? 'Roomie Bio',
           style: TextStyle(fontSize: 16),
         ),
       ),
+       SizedBox(height: 10),
     ],
   );
 }
