@@ -24,10 +24,11 @@ class ViewProfilePage extends StatelessWidget {
             _buildDetailsSection(),
             _buildLabelsSection(),
             Divider(),
+            _buildRoomieHeading(),
+             _buildRoomieSection(context),
+            Divider(),
             _buildRoommatePreferencesSection(),
             _buildPreferencesSection(),
-            Divider(),
-            _buildRoomieSection(),
           ],
         ),
       ),
@@ -154,32 +155,46 @@ Widget _buildDetailsSection() {
     );
   }
 
-  Widget _buildRoomieSection() {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: <Widget>[
-      Padding(
+  Widget _buildRoomieHeading(){
+    return Row (
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Padding(
         padding: EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
         child: Text(
           "${userProfile.name ?? 'User'}'s Roomie",
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+         ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRoomieSection(BuildContext context) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: <Widget>[
+        Padding(
+          padding: EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
+          child: Text(
+            "${userProfile.roomieName ?? 'User'}",
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
       ),
       SizedBox(height: 8), // Space between heading and roomie name
-      Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.0),
-        child: Text(
-          userProfile.roomieName ?? 'Roomie Name',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
+      Container(
+        width: MediaQuery.of(context).size.width * 0.9, 
+        padding: EdgeInsets.symmetric(horizontal: 16.0), 
+        child: userProfile.roomieImage != null 
+          ? Image.network(
+              userProfile.roomieImage!,
+              fit: BoxFit.cover, 
+            )
+          : SizedBox(height: 250, child: Placeholder()), 
       ),
-      SizedBox(height: 8), // Space between roomie name and image
-      userProfile.roomieImage != null 
-        ? Image.network(userProfile.roomieImage!)
-        : SizedBox(height: 200, child: Placeholder()), // Placeholder in case of no image
-      SizedBox(height: 8), // Space between image and roomie bio
+      SizedBox(height: 16), // Space between roomie name and image
       Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.0),
+        padding: EdgeInsets.symmetric(horizontal: 25.0),
         child: Text(
           userProfile.roomieBio ?? 'Roomie Bio',
           style: TextStyle(fontSize: 16),
