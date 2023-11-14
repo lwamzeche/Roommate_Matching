@@ -196,7 +196,7 @@ Widget _buildDetailsSection() {
       ),
       SizedBox(height: 16), // Space between roomie name and image
       Padding(
-        padding: EdgeInsets.symmetric(horizontal: 25.0),
+        padding: EdgeInsets.symmetric(horizontal: 40.0),
         child: Text(
           userProfile.roomieBio ?? 'Roomie Bio',
           style: TextStyle(fontSize: 16),

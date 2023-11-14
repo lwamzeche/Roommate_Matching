@@ -177,6 +177,11 @@ class ProfileCard extends StatelessWidget {
             child: InkWell(
               onTap: () {
                 // TODO: Navigate to the full profile view
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ViewProfilePage(userProfile: profile),
+                  ),
+                );
               },
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -195,11 +200,11 @@ class ProfileCard extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
-                      Icons.visibility, // Replace with a suitable icon
+                      Icons.unfold_more, // Replace with a suitable icon
                       color: Colors.white,
-                      size: 20,
+                      size: 18,
                     ),
-                    SizedBox(width: 8),
+                    SizedBox(width: 1),
                   ],
                 ),
               ),

@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
+import 'dart:math';
 
 import 'chat.dart';
 import 'list_chat.dart';
@@ -49,14 +50,25 @@ class _MatchesPageState extends State<MatchesPage> {
     });
   }
 
-  int _calculateMatchScore(
-      UserProfile profile, Map<String, String> preferences) {
-    int score = 0;
-    if (profile.sleepingHabit == preferences['sleepingHabit']) score += 1;
-    if (profile.smokingHabit == preferences['smokingHabit']) score += 1;
-    if (profile.timeInDorm == preferences['timeInDorm']) score += 1;
-    return score;
-  }
+int _calculateMatchScore(UserProfile profile, Map<String, String> preferences) {
+  double score = 0.0;
+
+  const weightSleepingHabit = 0.3;
+  const weightSmokingHabit = 0.4; // Smoking might be a deal breaker so it has a higher weight
+  const weightTimeInDorm = 0.3;
+
+  if (profile.sleepingHabit == preferences['sleepingHabit']) score += weightSleepingHabit;
+  if (profile.smokingHabit == preferences['smokingHabit']) score += weightSmokingHabit;
+  if (profile.timeInDorm == preferences['timeInDorm']) score += weightTimeInDorm;
+
+  double randomFactor = Random().nextDouble() * 0.2; // Random value between 0.0 and 0.2
+  score += randomFactor;
+
+  if (score > 1.0) score = 1.0;
+
+  return (score * 100).toInt(); // Convert to percentage
+}
+
 
   void _onItemTapped(int index) {
     setState(() {
@@ -113,7 +125,7 @@ class _MatchesPageState extends State<MatchesPage> {
                     CircleAvatar(backgroundImage: NetworkImage(match.imageUrl)),
                 title: Text(match.name),
                 subtitle: Text(
-                    'Match: ${matchScore * 33}%'), // Example score calculation
+                    'Match: ${matchScore}%'), // Example score calculation
                 trailing: ElevatedButton(
                   onPressed: () {
                     String matchedUserId = matches[index].documentId;
