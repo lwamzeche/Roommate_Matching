@@ -63,6 +63,9 @@ class _SmokingHabitsState extends State<SmokingHabits> {
           TextButton(
             onPressed: () {
               // TODO: Handle skip action
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => GamingHabit()),
+              );
             },
             child: Text('Skip', style: TextStyle(color: Colors.black)),
           ),

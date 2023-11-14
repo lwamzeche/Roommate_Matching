@@ -27,6 +27,9 @@ class _MBTIScreenState extends State<MBTIScreen> {
           TextButton(
             onPressed: () {
               // TODO: Implement skip functionality
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => SurveyScreen()),
+              );
             },
             child: Text(
               'Skip',

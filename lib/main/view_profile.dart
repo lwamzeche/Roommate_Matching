@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors, unnecessary_string_interpolations, prefer_const_constructors_in_immutables
-
 import 'package:flutter/material.dart';
 import 'main_page.dart';
 

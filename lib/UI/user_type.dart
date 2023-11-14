@@ -29,7 +29,9 @@ class _UserTypeScreenState extends State<UserTypeScreen> {
         actions: <Widget>[
           TextButton(
             onPressed: () {
-              // TODO: Implement skip functionality
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => GenderScreen()),
+              );
             },
             child: Text(
               'Skip',

@@ -170,11 +170,7 @@ class ProfileCard extends StatelessWidget {
             right: 16, // Adjust the positioning as needed
             child: InkWell(
               onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => ViewProfilePage(userProfile: profile),
-                  ),
-                );
+                // TODO: Navigate to the full profile view
               },
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),

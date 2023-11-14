@@ -63,6 +63,10 @@ class _TimeInDormState extends State<TimeInDorm> {
           TextButton(
             onPressed: () {
               // TODO: Handle skip action
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                    builder: (context) => Nationality()),
+              );
             },
             child: Text('Skip', style: TextStyle(color: Colors.black)),
           ),
