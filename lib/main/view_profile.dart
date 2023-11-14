@@ -176,7 +176,7 @@ Widget _buildLabel(String text) {
     ),
     backgroundColor: Colors.white,
     shape: StadiumBorder(side: BorderSide(color: Colors.blue)),
-    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
   );
 }
 
@@ -219,10 +219,11 @@ Widget _buildLabel(String text) {
       ),
       SizedBox(height: 30), // Space between roomie name and image
       Padding(
-        padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.1),
+        padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.15),
         child: Text(
           userProfile.roomieBio ?? 'Roomie Bio',
           style: TextStyle(fontSize: 16),
+          textAlign: TextAlign.center,
         ),
       ),
        SizedBox(height: 10),
