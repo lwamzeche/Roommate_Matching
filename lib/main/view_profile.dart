@@ -23,7 +23,7 @@ class ViewProfilePage extends StatelessWidget {
             Divider(),
             _buildDetailsSection(),
             _buildLabelsSection(),
-             Divider(),
+            Divider(),
           ],
         ),
       ),
@@ -42,8 +42,8 @@ class ViewProfilePage extends StatelessWidget {
           fit: BoxFit.cover,
         ),
         Container(
-          width: screenSize.width * 0.8, 
-          height: 80, 
+          width: screenSize.width * 0.8,
+          height: 80,
           padding: EdgeInsets.all(16.0),
           decoration: BoxDecoration(
             color: Colors.blue.withOpacity(0.9),
@@ -76,7 +76,8 @@ class ViewProfilePage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text('Bio', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          Text('Bio',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
           SizedBox(height: 8), // Added space
           Text(userProfile.bio ?? 'N/A'),
         ],
@@ -90,7 +91,11 @@ class ViewProfilePage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-        Text('All about ${userProfile.name ?? 'User'}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, )),
+          Text('All about ${userProfile.name ?? 'User'}',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              )),
         ],
       ),
     );

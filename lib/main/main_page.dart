@@ -204,104 +204,82 @@ class ProfileCard extends StatelessWidget {
           Positioned(
             left: 0,
             right: 0,
-            bottom: screenSize.height * 0.0021, // Adjust this value as needed to position the blue box
+            bottom: screenSize.height *
+                0.0021, // Adjust this value as needed to position the blue box
             child: GestureDetector(
-                onTap: () {
+              onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => ViewProfilePage(userProfile: profile),
                   ),
                 );
-            }, 
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10.0),
-              child: Container(
-                padding: EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  color: Colors.blue.withOpacity(0.9),
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Centered Row for Name and Age
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          '${profile.name ?? 'Unavailable'}, ${profile.age ?? 'N/A'} yrs',
-                          style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                        height: 8), // Space between name/age and department
-                    // Department Text with smaller font
-                    Text(
-                      profile.department ?? 'Department: Unavailable',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16), // Smaller font size for department
-                    ),
-                    SizedBox(
-                        height: 16), // Space between department and attributes
-                    // Attributes Row
-                    Wrap(
-                      alignment: WrapAlignment.start,
-                      spacing: 8.0, // Space between chips
-                      children: [
-                        Chip(
-                          label: Text(profile.mbti ?? 'MBTI: Unavailable'),
-                          labelStyle: TextStyle(color: Colors.white),
-                          backgroundColor: Colors.blue.shade300,
-                        ),
-                        Chip(
-                          label: Text(
-                              profile.dormitory ?? 'Dormitory: Unavailable'),
-                          labelStyle: TextStyle(color: Colors.white),
-                          backgroundColor: Colors.blue.shade300,
-                        ),
-                        Chip(
-                          label: Text(
-                              profile.userType ?? 'User Type: Unavailable'),
-                          labelStyle: TextStyle(color: Colors.white),
-                          backgroundColor: Colors.blue.shade300,
-                        ),
-                      ],
-                    ),
-                  ],
+              },
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.0),
+                child: Container(
+                  padding: EdgeInsets.all(16.0),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.withOpacity(0.9),
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Centered Row for Name and Age
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            '${profile.name ?? 'Unavailable'}, ${profile.age ?? 'N/A'} yrs',
+                            style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                          height: 8), // Space between name/age and department
+                      // Department Text with smaller font
+                      Text(
+                        profile.department ?? 'Department: Unavailable',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16), // Smaller font size for department
+                      ),
+                      SizedBox(
+                          height:
+                              16), // Space between department and attributes
+                      // Attributes Row
+                      Wrap(
+                        alignment: WrapAlignment.start,
+                        spacing: 8.0, // Space between chips
+                        children: [
+                          Chip(
+                            label: Text(profile.mbti ?? 'MBTI: Unavailable'),
+                            labelStyle: TextStyle(color: Colors.white),
+                            backgroundColor: Colors.blue.shade300,
+                          ),
+                          Chip(
+                            label: Text(
+                                profile.dormitory ?? 'Dormitory: Unavailable'),
+                            labelStyle: TextStyle(color: Colors.white),
+                            backgroundColor: Colors.blue.shade300,
+                          ),
+                          Chip(
+                            label: Text(
+                                profile.userType ?? 'User Type: Unavailable'),
+                            labelStyle: TextStyle(color: Colors.white),
+                            backgroundColor: Colors.blue.shade300,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-            ),
           ),
-
-          // Like and dislike buttons
-          // Positioned(
-          //   bottom: 0,
-          //   left: screenSize.width * 0.05,
-          //   right: screenSize.width * 0.05, // Lower down the buttons
-          //   child: Row(
-          //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-          //     children: [
-          //       FloatingActionButton(
-          //         heroTag: "btn1",
-          //         onPressed: () {}, // Implement dislike action
-          //         backgroundColor: Colors.white,
-          //         child: Icon(Icons.close, color: Colors.blue),
-          //       ),
-          //       FloatingActionButton(
-          //         heroTag: "btn2",
-          //         onPressed: () {}, // Implement like action
-          //         backgroundColor: Colors.white,
-          //         child: Icon(Icons.favorite, color: Colors.blue),
-          //       ),
-          //     ],
-          //   ),
-          // ),
         ],
       ),
     );
