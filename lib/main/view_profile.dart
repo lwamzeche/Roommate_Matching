@@ -24,6 +24,8 @@ class ViewProfilePage extends StatelessWidget {
             _buildDetailsSection(),
             _buildLabelsSection(),
             Divider(),
+            _buildRoommatePreferencesSection(),
+            _buildPreferencesSection(),
           ],
         ),
       ),
@@ -84,26 +86,24 @@ class ViewProfilePage extends StatelessWidget {
       ),
     );
   }
-
-  Widget _buildDetailsSection() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
+Widget _buildDetailsSection() {
+  return Padding(
+    padding: EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
           Text('All about ${userProfile.name ?? 'User'}',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              )),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          SizedBox(height: 8), // Added space
         ],
-      ),
-    );
-  }
+    ),
+  );
+}
+
 
   Widget _buildLabelsSection() {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(10.0),
       child: Wrap(
         spacing: 8.0,
         children: <Widget>[
@@ -115,6 +115,34 @@ class ViewProfilePage extends StatelessWidget {
     );
   }
 
+  Widget _buildRoommatePreferencesSection() {
+  return Row(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: <Widget>[
+      Padding(
+        padding: EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
+        child: Text(
+          "${userProfile.name ?? 'User'}'s Preferences in Roommates",
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+      ),
+      ],
+    );
+  }
+    Widget _buildPreferencesSection() {
+      return Padding(
+        padding: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0, top: 4.0),
+        child: Wrap(
+          spacing: 8.0,
+          children: <Widget>[
+            _buildLabel(userProfile.sleepingHabit ?? 'Sleeping Habit'),
+            _buildLabel(userProfile.timeInDorm ?? 'Time in Dorm'),
+            _buildLabel(userProfile.smokingHabit ?? 'Smoking Habit'),
+          ],
+        ),
+      );
+    }
+
   Widget _buildLabel(String text) {
     return Chip(
       label: Text(text),
@@ -124,3 +152,4 @@ class ViewProfilePage extends StatelessWidget {
     );
   }
 }
+
