@@ -1,8 +1,26 @@
 // ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors
 import 'package:flutter/material.dart';
 import 'user_type.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 
 class LoginScreen extends StatelessWidget {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  Future<void> _login(BuildContext context) async {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserTypeScreen()));
+    } on FirebaseAuthException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to sign in. Please check your credentials.'))
+      );
+    }
+  }
   @override
   Widget build(BuildContext context) {
     // Getting screen size for responsive layout
@@ -50,6 +68,7 @@ class LoginScreen extends StatelessWidget {
                 SizedBox(height: screenSize.height * 0.08),
                 // Email TextField
                 TextField(
+                  controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                     labelText: 'Email',
@@ -60,6 +79,7 @@ class LoginScreen extends StatelessWidget {
                 SizedBox(height: screenSize.height * 0.02),
                 // Password TextField
                 TextField(
+                  controller: _passwordController,
                   obscureText: true,
                   decoration: InputDecoration(
                     labelText: 'Password',
@@ -79,11 +99,12 @@ class LoginScreen extends StatelessWidget {
                 SizedBox(height: screenSize.height * 0.11),
                 // University Login Button
                 OutlinedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => UserTypeScreen()),
-                    );
-                  },
+                  // onPressed: () {
+                  //   Navigator.of(context).push(
+                  //     MaterialPageRoute(builder: (context) => UserTypeScreen()),
+                  //   );
+                  // },
+                  onPressed: () => _login(context),
                   style: OutlinedButton.styleFrom(
                     side: BorderSide(color: Colors.blue),
                     shape: RoundedRectangleBorder(
