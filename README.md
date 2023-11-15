@@ -27,10 +27,6 @@ To run this project, ensure you have Flutter installed on your machine and a Fir
 ## Testing
 Tests can be found in the `test/` directory. Run tests using the `flutter test` command to ensure code quality and functionality.
 
-## Contribution
-Please read `CONTRIBUTING.md` for details on our code of conduct, and the process for submitting pull requests to us.
-
----
 
 This README is a brief overview of the app's structure and setup instructions. For more detailed information, please refer to the individual `.dart` files within the `lib/` directory.
 
