@@ -68,7 +68,8 @@ class _MBTIScreenState extends State<MBTIScreen> {
                 'INTJ',
                 'ISTP',
                 'ISFP',
-                'INFP',
+                'ISFJ'
+                    'INFP',
                 'INTP',
                 'ESTP',
                 'ESFP',

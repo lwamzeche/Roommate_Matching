@@ -65,6 +65,8 @@ class _DormitoryScreenState extends State<DormitoryScreen> {
                 'Sarang Hall',
                 'Somang Hall',
                 'Silloe Hall',
+                'Areum Hall',
+                'Dasom Hall',
                 'Jihye Hall',
                 'Heemang Hall',
                 'Sejong Hall',

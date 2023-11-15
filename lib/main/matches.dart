@@ -50,25 +50,30 @@ class _MatchesPageState extends State<MatchesPage> {
     });
   }
 
-int _calculateMatchScore(UserProfile profile, Map<String, String> preferences) {
-  double score = 0.0;
+  int _calculateMatchScore(
+      UserProfile profile, Map<String, String> preferences) {
+    double score = 0.0;
 
-  const weightSleepingHabit = 0.3;
-  const weightSmokingHabit = 0.4; // Smoking might be a deal breaker so it has a higher weight
-  const weightTimeInDorm = 0.3;
+    const weightSleepingHabit = 0.3;
+    const weightSmokingHabit =
+        0.4; // Smoking might be a deal breaker so it has a higher weight
+    const weightTimeInDorm = 0.3;
 
-  if (profile.sleepingHabit == preferences['sleepingHabit']) score += weightSleepingHabit;
-  if (profile.smokingHabit == preferences['smokingHabit']) score += weightSmokingHabit;
-  if (profile.timeInDorm == preferences['timeInDorm']) score += weightTimeInDorm;
+    if (profile.sleepingHabit == preferences['sleepingHabit'])
+      score += weightSleepingHabit;
+    if (profile.smokingHabit == preferences['smokingHabit'])
+      score += weightSmokingHabit;
+    if (profile.timeInDorm == preferences['timeInDorm'])
+      score += weightTimeInDorm;
 
-  double randomFactor = Random().nextDouble() * 0.2; // Random value between 0.0 and 0.2
-  score += randomFactor;
+    double randomFactor =
+        Random().nextDouble() * 0.2; // Random value between 0.0 and 0.2
+    score += randomFactor;
 
-  if (score > 1.0) score = 1.0;
+    if (score > 1.0) score = 1.0;
 
-  return (score * 100).toInt(); // Convert to percentage
-}
-
+    return (score * 100).toInt(); // Convert to percentage
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -107,8 +112,10 @@ int _calculateMatchScore(UserProfile profile, Map<String, String> preferences) {
             return Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
-            return Center(child: Text('Error fetching matches'));
+            print(snapshot.error); // Log the error to the console for debugging
+            return Center(child: Text('Error: ${snapshot.error.toString()}'));
           }
+
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return Center(child: Text('No matches found'));
           }
@@ -124,8 +131,8 @@ int _calculateMatchScore(UserProfile profile, Map<String, String> preferences) {
                 leading:
                     CircleAvatar(backgroundImage: NetworkImage(match.imageUrl)),
                 title: Text(match.name),
-                subtitle: Text(
-                    'Match: ${matchScore}%'), // Example score calculation
+                subtitle:
+                    Text('Match: ${matchScore}%'), // Example score calculation
                 trailing: ElevatedButton(
                   onPressed: () {
                     String matchedUserId = matches[index].documentId;
@@ -205,11 +212,15 @@ class UserProfile {
     final data = snapshot.data() as Map<String, dynamic>;
     return UserProfile(
       documentId: snapshot.id, // Set the document ID from the snapshot
-      imageUrl: data['ImageUrl'],
-      name: data['Name'],
-      sleepingHabit: data['sleepingHabit'],
-      smokingHabit: data['smokingHabit'],
-      timeInDorm: data['timeInDorm'],
+      imageUrl:
+          data['ImageUrl'] as String? ?? '', // Provide a default value if null
+      name: data['Name'] as String? ?? '', // Provide a default value if null
+      sleepingHabit: data['sleepingHabit'] as String? ??
+          '', // Provide a default value if null
+      smokingHabit:
+          data['Smoker'] as String? ?? '', // Adjusted to the correct field name
+      timeInDorm: data['Sometimes in dorm'] as String? ??
+          '', // Adjusted to the correct field name
     );
   }
 }
