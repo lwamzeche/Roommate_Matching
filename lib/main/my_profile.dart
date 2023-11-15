@@ -97,7 +97,18 @@ class _MyProfilePageState extends State<MyProfilePage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: 70), // Add some space at the top
+              Align(
+                alignment: Alignment.centerRight,
+                child: Padding(
+                  padding: EdgeInsets.only(right: 16, top: 10),
+                  child: TextButton(
+                    onPressed: () {
+                      // TODO: Edit implementation should be here but i dont have time and it is not essential
+                    },
+                    child: Text('Edit', style: TextStyle(color: Colors.blue)),
+                  ),
+                ),
+              ),
               CircleAvatar(
                 radius: 60,
                 backgroundImage: NetworkImage(myProfile!.imageUrl ?? 'https://via.placeholder.com/150'),
