@@ -141,8 +141,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 alignment: Alignment.centerLeft,
                 child: InkWell(
                   onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => SleepHabitScreen()));
+                    // Navigator.of(context).push(MaterialPageRoute(
+                    //     builder: (context) => SleepHabitScreen()));
                   },
                   child: Text(
                     'Retake tests',

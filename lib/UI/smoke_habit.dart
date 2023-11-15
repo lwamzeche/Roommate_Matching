@@ -2,8 +2,12 @@
 
 import 'package:flutter/material.dart';
 import './gaming_habit.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import './firestore_service.dart';
 
 class SmokingHabits extends StatefulWidget {
+  final User currentUser;
+  SmokingHabits({required this.currentUser});
   @override
   _SmokingHabitsState createState() => _SmokingHabitsState();
 }
@@ -64,7 +68,7 @@ class _SmokingHabitsState extends State<SmokingHabits> {
             onPressed: () {
               // TODO: Handle skip action
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => GamingHabit()),
+                MaterialPageRoute(builder: (context) => GamingHabit(currentUser: widget.currentUser)),
               );
             },
             child: Text('Skip', style: TextStyle(color: Colors.black)),
@@ -117,7 +121,7 @@ class _SmokingHabitsState extends State<SmokingHabits> {
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => GamingHabit()),
+                    MaterialPageRoute(builder: (context) => GamingHabit(currentUser: widget.currentUser)),
                   );
                 },
                 style: ElevatedButton.styleFrom(

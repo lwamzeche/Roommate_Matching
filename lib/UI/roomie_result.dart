@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'dart:io' show Platform;
 import 'roomate_survey.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class RoomieSuccessPage extends StatelessWidget {
+  final User currentUser;
+  RoomieSuccessPage({required this.currentUser});
   final String roomieName = "SBE";
   final String roomieImagePath = 'assets/Roomie/SBE.jpg';
+  final String roomieExplanation = "SBE = Smoker + Early bird + External";
 
   @override
   Widget build(BuildContext context) {
@@ -27,17 +31,22 @@ class RoomieSuccessPage extends StatelessWidget {
             SizedBox(height: 10),
             Text(
               'Your Roomie type is:',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 20), // Space between text and name
             Text(
               roomieName,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blue),
             ),
-            SizedBox(height: 20), // Space between name and image
+            SizedBox(height: 15), // Space between name and image
             Image.asset(
               roomieImagePath,
               width: screenSize.width * 0.5,
+            ),
+            SizedBox(height: 15),
+            Text(
+              roomieExplanation,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blue),
             ),
             SizedBox(height: 20), // Space between image and description
             Padding(
@@ -59,7 +68,7 @@ class RoomieSuccessPage extends StatelessWidget {
                 onPressed: () {
                     Navigator.of(context).push(
                     MaterialPageRoute(
-                        builder: (context) => RoomatePreferenceScreen()),
+                        builder: (context) => RoomatePreferenceScreen(currentUser: currentUser!)),
                     );
                 },
                 child: Text('Continue',

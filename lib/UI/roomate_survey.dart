@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'dart:io' show Platform;
 import 'sleep_habit.dart';
 import 'survey_success.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class  RoomatePreferenceScreen extends StatelessWidget {
+  final User currentUser;
+  RoomatePreferenceScreen({required this.currentUser});
   @override
   Widget build(BuildContext context) {
     // Getting screen size for responsive layout
@@ -133,7 +136,7 @@ class  RoomatePreferenceScreen extends StatelessWidget {
               onPressed: () {
                 // TODO: Handle skip survey action
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => SurveySuccessScreen()),
+                  MaterialPageRoute(builder: (context) => SurveySuccessScreen(currentUser: currentUser)),
                 );
               },
               style: OutlinedButton.styleFrom(
@@ -157,7 +160,7 @@ class  RoomatePreferenceScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                      builder: (context) => SleepHabitScreen()),
+                      builder: (context) => SleepHabitScreen(currentUser: currentUser)),
                 );
               },
               child: Text('Start survey',
