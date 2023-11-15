@@ -1,7 +1,9 @@
-// ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors
-
+// ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors, library_private_types_in_public_api
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:uuid/uuid.dart';
+import 'dart:math';
+
 import 'chat.dart';
 import 'main_page.dart';
 import 'matches.dart';
@@ -13,13 +15,33 @@ class MyChatsScreen extends StatefulWidget {
 }
 
 class _MyChatsScreenState extends State<MyChatsScreen> {
-  List<ChatEntry> chats = [];
-  int _selectedIndex = 2; // Since the chat page is at index 2
+  List<UserProfile> matches = [];
+  int _selectedIndex = 2;
+  late final String currentUserId;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
   void initState() {
     super.initState();
-    loadMatchesAsChats();
+    currentUserId = Uuid().v4(); // Generate a random user ID for simulation
+    _getMatches();
+  }
+
+  void _getMatches() {
+    // Subscribe to the userProfiles collection
+    _firestore.collection('userProfiles').snapshots().listen((snapshot) {
+      final List<UserProfile> matchList = snapshot.docs.map((doc) {
+        return UserProfile.fromSnapshot(doc);
+      }).toList();
+
+      // Perform any sorting or filtering logic if needed
+      // For simplicity, we're not doing that here
+
+      // Update the matches list
+      setState(() {
+        matches = matchList;
+      });
+    });
   }
 
   void _onItemTapped(int index) {
@@ -52,38 +74,6 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
     }
   }
 
-  // This function is called to load all matches as chats
-  void loadMatchesAsChats() {
-    // Assuming you have access to some function that fetches your matches
-    fetchMatches().then((matchList) {
-      setState(() {
-        chats = matchList.map((match) {
-          // Assuming 'match' is a UserProfile object like the one from your MatchesPage
-          return ChatEntry(
-            chatId: match
-                .documentId, // Or any other unique id that represents the chat
-            currentUserId:
-                'yourCurrentUserId', // Replace with the actual current user ID
-            imageUrl: match.imageUrl,
-            name: match.name,
-            lastMessage:
-                'You matched with ${match.name}!', // Placeholder for last message
-          );
-        }).toList();
-      });
-    });
-  }
-
-  Future<List<UserProfile>> fetchMatches() async {
-    // Here you should write the code to fetch the matches from your Firestore collection
-    // For now, let's assume this function returns a list of UserProfiles
-    var firestore = FirebaseFirestore.instance;
-    var querySnapshot = await firestore.collection('userProfiles').get();
-    return querySnapshot.docs
-        .map((doc) => UserProfile.fromSnapshot(doc))
-        .toList();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,25 +81,15 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
         title: Text('My Chats'),
       ),
       body: ListView.builder(
-        itemCount: chats.length,
+        itemCount: matches.length,
         itemBuilder: (context, index) {
-          final chat = chats[index];
+          final match = matches[index];
           return ListTile(
-            leading: CircleAvatar(
-              backgroundImage: NetworkImage(chat.imageUrl),
-            ),
-            title: Text(chat.name),
-            subtitle: Text(chat.lastMessage),
+            leading:
+                CircleAvatar(backgroundImage: NetworkImage(match.imageUrl)),
+            title: Text(match.name),
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ChatScreen(
-                    chatId: chat.chatId,
-                    currentUserId: chat.currentUserId,
-                  ),
-                ),
-              );
+              _createOrGetChat(match.documentId);
             },
           );
         },
@@ -129,25 +109,33 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
       ),
     );
   }
+
+  void _createOrGetChat(String matchedUserId) {
+    List<String> ids = [currentUserId, matchedUserId];
+    ids.sort(); // Ensure consistent order
+    String chatId = ids.join('_');
+
+    // Check Firestore for an existing chat document
+    _firestore.collection('chats').doc(chatId).get().then((chatDoc) {
+      if (!chatDoc.exists) {
+        // Chat doesn't exist, create a new chat document
+        _firestore.collection('chats').doc(chatId).set({
+          'userIds': ids,
+          'timestamp': FieldValue.serverTimestamp(),
+        });
+      }
+      // Navigate to the chat screen
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              ChatScreen(chatId: chatId, currentUserId: currentUserId),
+        ),
+      );
+    });
+  }
 }
 
-class ChatEntry {
-  final String chatId;
-  final String currentUserId;
-  final String imageUrl;
-  final String name;
-  final String lastMessage;
-
-  ChatEntry({
-    required this.chatId,
-    required this.currentUserId,
-    required this.imageUrl,
-    required this.name,
-    required this.lastMessage,
-  });
-}
-
-// Assume UserProfile is defined elsewhere in your project
 class UserProfile {
   final String documentId;
   final String imageUrl;
@@ -163,8 +151,8 @@ class UserProfile {
     final data = snapshot.data() as Map<String, dynamic>;
     return UserProfile(
       documentId: snapshot.id,
-      imageUrl: data['ImageUrl'],
-      name: data['Name'],
+      imageUrl: data['ImageUrl'] as String? ?? '',
+      name: data['Name'] as String? ?? '',
     );
   }
 }
