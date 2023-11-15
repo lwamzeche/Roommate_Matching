@@ -129,9 +129,10 @@ class LoginScreen extends StatelessWidget {
                 // Login Button
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => UserTypeScreen( )),
-                    );
+                    // Navigator.of(context).push(
+                    //   MaterialPageRoute(builder: (context) => UserTypeScreen( )),
+                    // );
+                    _login(context); //trying two logins 
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue, // Use backgroundColor

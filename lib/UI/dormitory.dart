@@ -1,8 +1,13 @@
 // ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, library_private_types_in_public_api
 import 'package:flutter/material.dart';
 import './mbti.dart';
+import './firestore_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 
 class DormitoryScreen extends StatefulWidget {
+  final User currentUser;
+  DormitoryScreen({required this.currentUser});
   @override
   _DormitoryScreenState createState() => _DormitoryScreenState();
 }
@@ -27,7 +32,7 @@ class _DormitoryScreenState extends State<DormitoryScreen> {
           TextButton(
             onPressed: () {
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => MBTIScreen()),
+                MaterialPageRoute(builder: (context) => MBTIScreen(currentUser: widget.currentUser!)),
               );
               // TODO: Implement skip functionality
             },
@@ -89,8 +94,12 @@ class _DormitoryScreenState extends State<DormitoryScreen> {
             Spacer(),
             ElevatedButton(
               onPressed: () {
+                if (widget.currentUser?.uid != null) {
+                  print("selectedGender: $_selectedGender");
+                  FirestoreService.updateUserData(widget.currentUser.uid, "Dormitory", _selectedGender?? 'N/A');
+                }
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => MBTIScreen()),
+                  MaterialPageRoute(builder: (context) => MBTIScreen(currentUser: widget.currentUser!)),
                 );
               },
               style: ElevatedButton.styleFrom(

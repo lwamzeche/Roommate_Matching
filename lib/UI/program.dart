@@ -1,8 +1,12 @@
 // ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, library_private_types_in_public_api
 import 'package:flutter/material.dart';
 import 'dormitory.dart';
+import './firestore_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ProgramScreen extends StatefulWidget {
+  final User currentUser;
+  ProgramScreen({required this.currentUser});
   @override
   _ProgramScreenState createState() => _ProgramScreenState();
 }
@@ -27,7 +31,7 @@ class _ProgramScreenState extends State<ProgramScreen> {
           TextButton(
             onPressed: () {
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => DormitoryScreen()),
+                MaterialPageRoute(builder: (context) => DormitoryScreen(currentUser: widget.currentUser!)),
               );
             },
             child: Text(
@@ -75,8 +79,12 @@ class _ProgramScreenState extends State<ProgramScreen> {
             Spacer(),
             ElevatedButton(
               onPressed: () {
+                if (widget.currentUser?.uid != null) {
+                  print("selectedGender: $_selectedGender");
+                  FirestoreService.updateUserData(widget.currentUser.uid, "School Program", _selectedGender?? 'Undergraduate');
+                }
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => DormitoryScreen()),
+                  MaterialPageRoute(builder: (context) => DormitoryScreen(currentUser: widget.currentUser!)),
                 );
               },
               style: ElevatedButton.styleFrom(

@@ -1,8 +1,12 @@
 // ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, library_private_types_in_public_api
 import 'package:flutter/material.dart';
 import 'program.dart';
+import './firestore_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class GenderScreen extends StatefulWidget {
+  final User currentUser;
+  GenderScreen({required this.currentUser});
   @override
   _GenderScreenState createState() => _GenderScreenState();
 }
@@ -27,7 +31,7 @@ class _GenderScreenState extends State<GenderScreen> {
           TextButton(
             onPressed: () {
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => ProgramScreen()),
+                MaterialPageRoute(builder: (context) => ProgramScreen(currentUser: widget.currentUser)),
               );
               // TODO: Implement skip functionality
             },
@@ -76,8 +80,12 @@ class _GenderScreenState extends State<GenderScreen> {
             Spacer(),
             ElevatedButton(
               onPressed: () {
+                if (widget.currentUser?.uid != null) {
+                  print("selectedGender: $_selectedGender");
+                  FirestoreService.updateUserData(widget.currentUser.uid, "Gender", _selectedGender ?? 'Male');
+                }
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => ProgramScreen()),
+                  MaterialPageRoute(builder: (context) => ProgramScreen(currentUser: widget.currentUser)),
                 );
               },
               style: ElevatedButton.styleFrom(
