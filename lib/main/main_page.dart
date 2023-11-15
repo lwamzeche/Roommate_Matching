@@ -52,6 +52,12 @@ class _MainPageState extends State<MainPage> {
         mbti: data['MBTI'],
         schoolProgram: data['School Program'],
         userType: data['User Type'],
+        sleepingHabit: data['sleepingHabit'],
+        timeInDorm: data['timeInDorm'],
+        smokingHabit: data['smokingHabit'],
+        roomieImage: data['roomieImage'],
+        roomieName: data['roomieName'],
+        roomieBio: data['roomieBio'],
       );
     }).toList();
 
@@ -65,40 +71,26 @@ class _MainPageState extends State<MainPage> {
       _selectedIndex = index;
     });
     if (index == 0) {
-      // Assuming 'Home' is the first item in the BottomNavigationBar
       Navigator.pushReplacement(
-        // Use pushReplacement to avoid building a large stack of pages
         context,
-        MaterialPageRoute(
-            builder: (context) => MainPage()), // Navigate to MyProfilePage
+        MaterialPageRoute(builder: (context) => MainPage()),
       );
     } else if (index == 1) {
-      // Assuming 'Home' is the first item in the BottomNavigationBar
       Navigator.pushReplacement(
-        // Use pushReplacement to avoid building a large stack of pages
         context,
-        MaterialPageRoute(
-            builder: (context) => MatchesPage()), // Navigate to MyProfilePage
+        MaterialPageRoute(builder: (context) => MatchesPage()),
       );
     } else if (index == 2) {
-      // Assuming 'Home' is the first item in the BottomNavigationBar
       Navigator.pushReplacement(
-        // Use pushReplacement to avoid building a large stack of pages
         context,
-        MaterialPageRoute(
-            builder: (context) => MyChatsScreen()), // Navigate to MyProfilePage
+        MaterialPageRoute(builder: (context) => MyChatsScreen()),
       );
     } else if (index == 3) {
       Navigator.pushReplacement(
-        // Use pushReplacement to avoid building a large stack of pages
         context,
-        MaterialPageRoute(
-            builder: (context) => MyProfilePage()), // Navigate to MyProfilePage
+        MaterialPageRoute(builder: (context) => MyProfilePage()),
       );
-      // Assuming 'Profile' is the fourth item
-      // You might want to navigate to some other profile page or perform another action
     }
-    // Add additional navigation handling for other indices if needed
   }
 
   @override
@@ -171,6 +163,11 @@ class ProfileCard extends StatelessWidget {
             child: InkWell(
               onTap: () {
                 // TODO: Navigate to the full profile view
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ViewProfilePage(userProfile: profile),
+                  ),
+                );
               },
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -189,11 +186,11 @@ class ProfileCard extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
-                      Icons.visibility, // Replace with a suitable icon
+                      Icons.unfold_more, // Replace with a suitable icon
                       color: Colors.white,
-                      size: 20,
+                      size: 18,
                     ),
-                    SizedBox(width: 8),
+                    SizedBox(width: 1),
                   ],
                 ),
               ),
@@ -296,6 +293,12 @@ class UserProfile {
   final String? mbti;
   final String? schoolProgram;
   final String? userType;
+  final String? sleepingHabit;
+  final String? timeInDorm;
+  final String? smokingHabit;
+  final String? roomieImage;
+  final String? roomieName;
+  final String? roomieBio;
 
   UserProfile({
     this.name,
@@ -307,5 +310,11 @@ class UserProfile {
     this.mbti,
     this.schoolProgram,
     this.userType,
+    this.sleepingHabit,
+    this.timeInDorm,
+    this.smokingHabit,
+    this.roomieImage,
+    this.roomieName,
+    this.roomieBio,
   });
 }

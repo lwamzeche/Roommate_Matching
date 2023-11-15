@@ -1,7 +1,8 @@
-// ignore_for_file: library_private_types_in_public_api, prefer_const_constructors, prefer_const_literals_to_create_immutables, use_key_in_widget_constructors
+// ignore_for_file: library_private_types_in_public_api, prefer_const_constructors, prefer_const_literals_to_create_immutables, use_key_in_widget_constructors, curly_braces_in_flow_control_structures, unnecessary_brace_in_string_interps
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
+import 'dart:math';
 
 import 'chat.dart';
 import 'list_chat.dart';
@@ -51,11 +52,27 @@ class _MatchesPageState extends State<MatchesPage> {
 
   int _calculateMatchScore(
       UserProfile profile, Map<String, String> preferences) {
-    int score = 0;
-    if (profile.sleepingHabit == preferences['sleepingHabit']) score += 1;
-    if (profile.smokingHabit == preferences['smokingHabit']) score += 1;
-    if (profile.timeInDorm == preferences['timeInDorm']) score += 1;
-    return score;
+    double score = 0.0;
+
+    const weightSleepingHabit = 0.3;
+    const weightSmokingHabit =
+        0.4; // Smoking might be a deal breaker so it has a higher weight
+    const weightTimeInDorm = 0.3;
+
+    if (profile.sleepingHabit == preferences['sleepingHabit'])
+      score += weightSleepingHabit;
+    if (profile.smokingHabit == preferences['smokingHabit'])
+      score += weightSmokingHabit;
+    if (profile.timeInDorm == preferences['timeInDorm'])
+      score += weightTimeInDorm;
+
+    double randomFactor =
+        Random().nextDouble() * 0.2; // Random value between 0.0 and 0.2
+    score += randomFactor;
+
+    if (score > 1.0) score = 1.0;
+
+    return (score * 100).toInt(); // Convert to percentage
   }
 
   void _onItemTapped(int index) {
@@ -95,8 +112,9 @@ class _MatchesPageState extends State<MatchesPage> {
             return Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
-            return Center(child: Text('Error fetching matches'));
+            return Center(child: Text('Error: ${snapshot.error.toString()}'));
           }
+
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return Center(child: Text('No matches found'));
           }
@@ -112,33 +130,27 @@ class _MatchesPageState extends State<MatchesPage> {
                 leading:
                     CircleAvatar(backgroundImage: NetworkImage(match.imageUrl)),
                 title: Text(match.name),
-                subtitle: Text(
-                    'Match: ${matchScore * 33}%'), // Example score calculation
+                subtitle:
+                    Text('Match: ${matchScore}%'), // Example score calculation
                 trailing: ElevatedButton(
                   onPressed: () {
                     String matchedUserId = matches[index].documentId;
-                    // This should be the document ID of the matched profile
-
                     // Generate the chatId
                     List<String> ids = [currentUserId, matchedUserId];
                     ids.sort(); // Ensure consistent order
                     String chatId = ids.join('_');
 
-                    // Check Firestore for an existing chat document
                     _firestore
                         .collection('chats')
                         .doc(chatId)
                         .get()
                         .then((chatDoc) {
                       if (!chatDoc.exists) {
-                        // Chat doesn't exist, create a new chat document
                         _firestore.collection('chats').doc(chatId).set({
                           'userIds': [currentUserId, matchedUserId],
                           'timestamp': FieldValue.serverTimestamp(),
-                          // other initial data for a new chat
                         });
                       }
-                      // Navigate to the chat screen
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -173,7 +185,7 @@ class _MatchesPageState extends State<MatchesPage> {
 }
 
 class UserProfile {
-  final String documentId; // Add a field for the document ID
+  final String documentId;
   final String imageUrl;
   final String name;
   final String sleepingHabit;
@@ -181,7 +193,7 @@ class UserProfile {
   final String timeInDorm;
 
   UserProfile({
-    required this.documentId, // Initialize the document ID
+    required this.documentId,
     required this.imageUrl,
     required this.name,
     required this.sleepingHabit,
@@ -192,12 +204,12 @@ class UserProfile {
   factory UserProfile.fromSnapshot(DocumentSnapshot snapshot) {
     final data = snapshot.data() as Map<String, dynamic>;
     return UserProfile(
-      documentId: snapshot.id, // Set the document ID from the snapshot
-      imageUrl: data['ImageUrl'],
-      name: data['Name'],
-      sleepingHabit: data['sleepingHabit'],
-      smokingHabit: data['smokingHabit'],
-      timeInDorm: data['timeInDorm'],
+      documentId: snapshot.id,
+      imageUrl: data['ImageUrl'] as String? ?? '',
+      name: data['Name'] as String? ?? '',
+      sleepingHabit: data['sleepingHabit'] as String? ?? '',
+      smokingHabit: data['Smoker'] as String? ?? '',
+      timeInDorm: data['Sometimes in dorm'] as String? ?? '',
     );
   }
 }

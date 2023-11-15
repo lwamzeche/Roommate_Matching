@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors, library_private_types_in_public_api
 import 'package:flutter/material.dart';
 import 'sleep_habit.dart';
+import 'roomate_survey.dart';
+import 'roomie_result.dart';
 
 class LifestyleSurveyScreen extends StatefulWidget {
   @override
@@ -38,7 +40,7 @@ class _LifestyleSurveyScreenState extends State<LifestyleSurveyScreen> {
             onPressed: () {
               // Handle skip action
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => SleepHabitScreen()),
+                MaterialPageRoute(builder: (context) => RoomatePreferenceScreen()),
               );
             },
             child: Text('Skip', style: TextStyle(color: Colors.blue)),
@@ -68,7 +70,7 @@ class _LifestyleSurveyScreenState extends State<LifestyleSurveyScreen> {
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => SleepHabitScreen()),
+                    MaterialPageRoute(builder: (context) => RoomieSuccessPage()),
                   );
                   // Save action
                 },

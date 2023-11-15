@@ -1,12 +1,14 @@
 // ignore_for_file: prefer_const_constructors, avoid_print
-
 import 'package:flutter/material.dart';
 import './gender.dart';
-// Import Firebase if you haven't already
 // import 'package:firebase_core/firebase_core.dart';
-// import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import './firestore_service.dart';
 
 class UserTypeScreen extends StatefulWidget {
+  final User currentUser;
+  UserTypeScreen({ required this.currentUser});
   @override
   _UserTypeScreenState createState() => _UserTypeScreenState();
 }
@@ -15,6 +17,11 @@ class _UserTypeScreenState extends State<UserTypeScreen> {
   String selectedUserType = '';
 
   @override
+  // void initState() {
+  //   super.initState();
+  //   print("User ID: ${widget.currentUser?.uid}");
+  // }
+
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
 
@@ -30,7 +37,7 @@ class _UserTypeScreenState extends State<UserTypeScreen> {
           TextButton(
             onPressed: () {
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => GenderScreen()),
+                MaterialPageRoute(builder: (context) => GenderScreen(currentUser: widget.currentUser)),
               );
             },
             child: Text(
@@ -64,12 +71,15 @@ class _UserTypeScreenState extends State<UserTypeScreen> {
             ),
             Spacer(),
             ElevatedButton(
-              onPressed: () {
-                saveSelectedUserType(selectedUserType);
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => GenderScreen()),
-                );
-              },
+            onPressed: () {
+              if (widget.currentUser.uid != null) {
+                print("selectedUserType: $selectedUserType");
+                FirestoreService.updateUserData(widget.currentUser!.uid, "User Type", selectedUserType);
+              }
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => GenderScreen(currentUser: widget.currentUser!)),
+              );
+            },
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,
                 backgroundColor: Colors.blue,
@@ -141,12 +151,5 @@ class _UserTypeScreenState extends State<UserTypeScreen> {
         ),
       ),
     );
-  }
-
-  void saveSelectedUserType(String userType) {
-    // TODO: Replace this with your Firebase code to save the userType
-    print('Selected UserType: $userType');
-    // Example Firebase call to save the userType
-    // FirebaseFirestore.instance.collection('users').doc(userId).update({'userType': userType});
   }
 }

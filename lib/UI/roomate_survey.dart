@@ -1,11 +1,10 @@
 // ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors
 import 'package:flutter/material.dart';
 import 'dart:io' show Platform;
-import 'life_survey.dart';
 import 'sleep_habit.dart';
-import 'roomate_survey.dart';
+import 'survey_success.dart';
 
-class SurveyScreen extends StatelessWidget {
+class  RoomatePreferenceScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Getting screen size for responsive layout
@@ -28,18 +27,6 @@ class SurveyScreen extends StatelessWidget {
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        // actions: [
-        //   TextButton(
-        //     onPressed: () {
-        //       // TODO: Handle skip survey action
-              
-        //     },
-        //     child: Text(
-        //       'Skip',
-        //       style: TextStyle(color: Colors.blue),
-        //     ),
-        //   )
-        // ],
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.1),
@@ -48,12 +35,12 @@ class SurveyScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Image.asset(
-              'assets/Roomie/Lifestyle Survey Intro.png', // Replace with your image asset.
+              'assets/Roomie/Preference Survey Intro.png', // Replace with your image asset.
               height: screenSize.height * 0.3,
             ),
             SizedBox(height: screenSize.height * 0.05),
             Text(
-              'Take our survey',
+              'What kind of roomate do you prefer?',
               style: TextStyle(
                 fontSize: baseFontSize, // Responsive font size
                 fontWeight: FontWeight.bold,
@@ -81,7 +68,7 @@ class SurveyScreen extends StatelessWidget {
                       ),
                     ),
                     TextSpan(
-                      text: ' 10 questions\n',
+                      text: ' 5 questions\n',
                       style: TextStyle(
                         color: Colors.blue,
                         fontSize: titleFontSize,
@@ -90,7 +77,7 @@ class SurveyScreen extends StatelessWidget {
                     ),
                     TextSpan(
                       text:
-                          'Take a survey about your lifestyle habits to find your perfect match',
+                          'Enter your preference in your potential roomate',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: subtitleFontSize,
@@ -146,7 +133,7 @@ class SurveyScreen extends StatelessWidget {
               onPressed: () {
                 // TODO: Handle skip survey action
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) =>  RoomatePreferenceScreen()),
+                  MaterialPageRoute(builder: (context) => SurveySuccessScreen()),
                 );
               },
               style: OutlinedButton.styleFrom(
@@ -170,7 +157,7 @@ class SurveyScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                      builder: (context) => LifestyleSurveyScreen()),
+                      builder: (context) => SleepHabitScreen()),
                 );
               },
               child: Text('Start survey',

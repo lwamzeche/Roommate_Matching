@@ -1,8 +1,12 @@
 // ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, library_private_types_in_public_api
 import 'package:flutter/material.dart';
 import 'survey.dart';
+import './firestore_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class MBTIScreen extends StatefulWidget {
+  final User currentUser;
+  MBTIScreen({required this.currentUser});
   @override
   _MBTIScreenState createState() => _MBTIScreenState();
 }
@@ -68,7 +72,8 @@ class _MBTIScreenState extends State<MBTIScreen> {
                 'INTJ',
                 'ISTP',
                 'ISFP',
-                'INFP',
+                'ISFJ'
+                    'INFP',
                 'INTP',
                 'ESTP',
                 'ESFP',
@@ -92,6 +97,10 @@ class _MBTIScreenState extends State<MBTIScreen> {
             Spacer(),
             ElevatedButton(
               onPressed: () {
+                if (widget.currentUser?.uid != null) {
+                  print("selectedGender: $_selectedGender");
+                  FirestoreService.updateUserData(widget.currentUser.uid, "MBTI", _selectedGender?? 'INFP');
+                }
                 Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => SurveyScreen()),
                 );
