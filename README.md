@@ -5,8 +5,8 @@ This repository contains the source code for the Roommate Matching mobile applic
 
 ## Structure
 - `lib/main.dart`: The entry point of the application, initializing the Firebase app and running the main app widget.
-- `lib/main/main_page.dart`: Hosts the primary navigation and tab views.
-- `lib/UI/`: Contains the user interface elements and screens for the app, including swappable cards, surveys, and user profiles.
+- `lib/main/main_page.dart`: Hosts the primary navigation, tab views and swappable cards.
+- `lib/UI/`: Contains the user interface elements and screens for the app, surveys, and user profiles.
 - `lib/UI/chat.dart`: Implements the chat interface and functionality.
 - `lib/UI/matches.dart`: Contains the logic for matching user profiles.
 
