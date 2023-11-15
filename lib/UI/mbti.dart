@@ -32,7 +32,7 @@ class _MBTIScreenState extends State<MBTIScreen> {
             onPressed: () {
               // TODO: Implement skip functionality
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => SurveyScreen()),
+                MaterialPageRoute(builder: (context) => SurveyScreen(currentUser: widget.currentUser)),
               );
             },
             child: Text(
@@ -103,7 +103,7 @@ class _MBTIScreenState extends State<MBTIScreen> {
                       "MBTI", _selectedGender ?? 'INFP');
                 }
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => SurveyScreen()),
+                  MaterialPageRoute(builder: (context) => SurveyScreen(currentUser: widget.currentUser)),
                 );
               },
               style: ElevatedButton.styleFrom(

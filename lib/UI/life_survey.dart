@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 import 'sleep_habit.dart';
 import 'roomate_survey.dart';
 import 'roomie_result.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 
 class LifestyleSurveyScreen extends StatefulWidget {
+  final User currentUser;
+  LifestyleSurveyScreen({required this.currentUser});
   @override
   _LifestyleSurveyScreenState createState() => _LifestyleSurveyScreenState();
 }
@@ -40,7 +44,7 @@ class _LifestyleSurveyScreenState extends State<LifestyleSurveyScreen> {
             onPressed: () {
               // Handle skip action
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => RoomatePreferenceScreen()),
+                MaterialPageRoute(builder: (context) => RoomatePreferenceScreen(currentUser: widget.currentUser)),
               );
             },
             child: Text('Skip', style: TextStyle(color: Colors.blue)),
@@ -70,7 +74,7 @@ class _LifestyleSurveyScreenState extends State<LifestyleSurveyScreen> {
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => RoomieSuccessPage()),
+                    MaterialPageRoute(builder: (context) => RoomieSuccessPage(currentUser: widget.currentUser)),
                   );
                   // Save action
                 },
