@@ -71,40 +71,26 @@ class _MainPageState extends State<MainPage> {
       _selectedIndex = index;
     });
     if (index == 0) {
-      // Assuming 'Home' is the first item in the BottomNavigationBar
       Navigator.pushReplacement(
-        // Use pushReplacement to avoid building a large stack of pages
         context,
-        MaterialPageRoute(
-            builder: (context) => MainPage()), // Navigate to MyProfilePage
+        MaterialPageRoute(builder: (context) => MainPage()),
       );
     } else if (index == 1) {
-      // Assuming 'Home' is the first item in the BottomNavigationBar
       Navigator.pushReplacement(
-        // Use pushReplacement to avoid building a large stack of pages
         context,
-        MaterialPageRoute(
-            builder: (context) => MatchesPage()), // Navigate to MyProfilePage
+        MaterialPageRoute(builder: (context) => MatchesPage()),
       );
     } else if (index == 2) {
-      // Assuming 'Home' is the first item in the BottomNavigationBar
       Navigator.pushReplacement(
-        // Use pushReplacement to avoid building a large stack of pages
         context,
-        MaterialPageRoute(
-            builder: (context) => MyChatsScreen()), // Navigate to MyProfilePage
+        MaterialPageRoute(builder: (context) => MyChatsScreen()),
       );
     } else if (index == 3) {
       Navigator.pushReplacement(
-        // Use pushReplacement to avoid building a large stack of pages
         context,
-        MaterialPageRoute(
-            builder: (context) => MyProfilePage()), // Navigate to MyProfilePage
+        MaterialPageRoute(builder: (context) => MyProfilePage()),
       );
-      // Assuming 'Profile' is the fourth item
-      // You might want to navigate to some other profile page or perform another action
     }
-    // Add additional navigation handling for other indices if needed
   }
 
   @override

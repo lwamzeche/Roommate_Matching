@@ -1,4 +1,4 @@
-// ignore_for_file: library_private_types_in_public_api, prefer_const_constructors, prefer_const_literals_to_create_immutables, use_key_in_widget_constructors
+// ignore_for_file: library_private_types_in_public_api, prefer_const_constructors, prefer_const_literals_to_create_immutables, use_key_in_widget_constructors, curly_braces_in_flow_control_structures, unnecessary_brace_in_string_interps
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
@@ -112,7 +112,6 @@ class _MatchesPageState extends State<MatchesPage> {
             return Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
-            print(snapshot.error); // Log the error to the console for debugging
             return Center(child: Text('Error: ${snapshot.error.toString()}'));
           }
 
@@ -136,28 +135,22 @@ class _MatchesPageState extends State<MatchesPage> {
                 trailing: ElevatedButton(
                   onPressed: () {
                     String matchedUserId = matches[index].documentId;
-                    // This should be the document ID of the matched profile
-
                     // Generate the chatId
                     List<String> ids = [currentUserId, matchedUserId];
                     ids.sort(); // Ensure consistent order
                     String chatId = ids.join('_');
 
-                    // Check Firestore for an existing chat document
                     _firestore
                         .collection('chats')
                         .doc(chatId)
                         .get()
                         .then((chatDoc) {
                       if (!chatDoc.exists) {
-                        // Chat doesn't exist, create a new chat document
                         _firestore.collection('chats').doc(chatId).set({
                           'userIds': [currentUserId, matchedUserId],
                           'timestamp': FieldValue.serverTimestamp(),
-                          // other initial data for a new chat
                         });
                       }
-                      // Navigate to the chat screen
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -192,7 +185,7 @@ class _MatchesPageState extends State<MatchesPage> {
 }
 
 class UserProfile {
-  final String documentId; // Add a field for the document ID
+  final String documentId;
   final String imageUrl;
   final String name;
   final String sleepingHabit;
@@ -200,7 +193,7 @@ class UserProfile {
   final String timeInDorm;
 
   UserProfile({
-    required this.documentId, // Initialize the document ID
+    required this.documentId,
     required this.imageUrl,
     required this.name,
     required this.sleepingHabit,
@@ -211,16 +204,12 @@ class UserProfile {
   factory UserProfile.fromSnapshot(DocumentSnapshot snapshot) {
     final data = snapshot.data() as Map<String, dynamic>;
     return UserProfile(
-      documentId: snapshot.id, // Set the document ID from the snapshot
-      imageUrl:
-          data['ImageUrl'] as String? ?? '', // Provide a default value if null
-      name: data['Name'] as String? ?? '', // Provide a default value if null
-      sleepingHabit: data['sleepingHabit'] as String? ??
-          '', // Provide a default value if null
-      smokingHabit:
-          data['Smoker'] as String? ?? '', // Adjusted to the correct field name
-      timeInDorm: data['Sometimes in dorm'] as String? ??
-          '', // Adjusted to the correct field name
+      documentId: snapshot.id,
+      imageUrl: data['ImageUrl'] as String? ?? '',
+      name: data['Name'] as String? ?? '',
+      sleepingHabit: data['sleepingHabit'] as String? ?? '',
+      smokingHabit: data['Smoker'] as String? ?? '',
+      timeInDorm: data['Sometimes in dorm'] as String? ?? '',
     );
   }
 }
