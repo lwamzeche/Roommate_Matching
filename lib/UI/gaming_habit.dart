@@ -1,8 +1,12 @@
 // ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors, library_private_types_in_public_api
 import 'package:flutter/material.dart';
 import 'time_indorm.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import './firestore_service.dart';
 
 class GamingHabit extends StatefulWidget {
+  final User currentUser;
+  GamingHabit({required this.currentUser});
   @override
   _GamingHabitsState createState() => _GamingHabitsState();
 }
@@ -64,7 +68,7 @@ class _GamingHabitsState extends State<GamingHabit> {
               // TODO: Handle skip action
               Navigator.of(context).push(
                 MaterialPageRoute(
-                    builder: (context) => TimeInDorm()),
+                    builder: (context) => TimeInDorm(currentUser: widget.currentUser)),
               );
             },
             child: Text('Skip', style: TextStyle(color: Colors.black)),
@@ -117,7 +121,7 @@ class _GamingHabitsState extends State<GamingHabit> {
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => TimeInDorm()),
+                    MaterialPageRoute(builder: (context) => TimeInDorm(currentUser: widget.currentUser)),
                   );
                 },
                 style: ElevatedButton.styleFrom(

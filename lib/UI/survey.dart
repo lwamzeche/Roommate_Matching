@@ -5,7 +5,11 @@ import 'life_survey.dart';
 import 'sleep_habit.dart';
 import 'roomate_survey.dart';
 
+import 'package:firebase_auth/firebase_auth.dart';
+
 class SurveyScreen extends StatelessWidget {
+  final User currentUser;
+  SurveyScreen({required this.currentUser});
   @override
   Widget build(BuildContext context) {
     // Getting screen size for responsive layout
@@ -53,7 +57,7 @@ class SurveyScreen extends StatelessWidget {
             ),
             SizedBox(height: screenSize.height * 0.05),
             Text(
-              'Take our survey',
+              'What type of roomate are you?',
               style: TextStyle(
                 fontSize: baseFontSize, // Responsive font size
                 fontWeight: FontWeight.bold,
@@ -90,7 +94,7 @@ class SurveyScreen extends StatelessWidget {
                     ),
                     TextSpan(
                       text:
-                          'Take a survey about your lifestyle habits to find your perfect match',
+                          'Take a survey about your lifestyle habits to find what type of roomate you are',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: subtitleFontSize,
@@ -131,7 +135,7 @@ class SurveyScreen extends StatelessWidget {
                     ),
                     TextSpan(
                       text:
-                          'Our system will match you with the most compatible roommate',
+                          'Our system will match you with the most compatible roommate according to your results',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: subtitleFontSize,
@@ -146,7 +150,7 @@ class SurveyScreen extends StatelessWidget {
               onPressed: () {
                 // TODO: Handle skip survey action
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) =>  RoomatePreferenceScreen()),
+                  MaterialPageRoute(builder: (context) =>  RoomatePreferenceScreen(currentUser: currentUser)),
                 );
               },
               style: OutlinedButton.styleFrom(
@@ -170,7 +174,7 @@ class SurveyScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                      builder: (context) => LifestyleSurveyScreen()),
+                      builder: (context) => LifestyleSurveyScreen(currentUser: currentUser)),
                 );
               },
               child: Text('Start survey',

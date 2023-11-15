@@ -2,8 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:roomie_project/UI/nationality.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import './firestore_service.dart';
 
 class TimeInDorm extends StatefulWidget {
+  final User currentUser;
+  TimeInDorm({required this.currentUser});
   @override
   _TimeInDormState createState() => _TimeInDormState();
 }
@@ -65,7 +69,7 @@ class _TimeInDormState extends State<TimeInDorm> {
               // TODO: Handle skip action
               Navigator.of(context).push(
                 MaterialPageRoute(
-                    builder: (context) => Nationality()),
+                    builder: (context) => Nationality(currentUser: widget.currentUser)),
               );
             },
             child: Text('Skip', style: TextStyle(color: Colors.black)),
@@ -118,7 +122,7 @@ class _TimeInDormState extends State<TimeInDorm> {
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => Nationality()),
+                    MaterialPageRoute(builder: (context) => Nationality(currentUser: widget.currentUser)),
                   );
                 },
                 style: ElevatedButton.styleFrom(

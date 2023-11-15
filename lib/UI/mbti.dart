@@ -32,7 +32,7 @@ class _MBTIScreenState extends State<MBTIScreen> {
             onPressed: () {
               // TODO: Implement skip functionality
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => SurveyScreen()),
+                MaterialPageRoute(builder: (context) => SurveyScreen(currentUser: widget.currentUser)),
               );
             },
             child: Text(
@@ -69,12 +69,10 @@ class _MBTIScreenState extends State<MBTIScreen> {
                 'INTJ',
                 'INTP',
                 'INFJ',
-                'INTJ',
                 'ISTP',
                 'ISFP',
-                'ISFJ'
-                    'INFP',
-                'INTP',
+                'ISFJ',
+                'INFP',
                 'ESTP',
                 'ESFP',
                 'ENFP',
@@ -83,6 +81,7 @@ class _MBTIScreenState extends State<MBTIScreen> {
                 'ESFJ',
                 'ENFJ',
                 'ENTJ',
+                'Do not know',
               ].map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
@@ -102,7 +101,7 @@ class _MBTIScreenState extends State<MBTIScreen> {
                   FirestoreService.updateUserData(widget.currentUser.uid, "MBTI", _selectedGender?? 'INFP');
                 }
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => SurveyScreen()),
+                  MaterialPageRoute(builder: (context) => SurveyScreen(currentUser: widget.currentUser)),
                 );
               },
               style: ElevatedButton.styleFrom(

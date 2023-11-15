@@ -2,8 +2,12 @@
 
 import 'package:flutter/material.dart';
 import './smoke_habit.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import './firestore_service.dart';
 
 class SleepHabitScreen extends StatefulWidget {
+  final User currentUser;
+  SleepHabitScreen({required this.currentUser});
   @override
   _SleepHabitScreenState createState() => _SleepHabitScreenState();
 }
@@ -64,7 +68,7 @@ class _SleepHabitScreenState extends State<SleepHabitScreen> {
             onPressed: () {
               // TODO: Handle skip action
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => SmokingHabits()),
+                MaterialPageRoute(builder: (context) => SmokingHabits(currentUser: widget.currentUser)),
               );
             },
             child: Text('Skip', style: TextStyle(color: Colors.black)),
@@ -117,7 +121,7 @@ class _SleepHabitScreenState extends State<SleepHabitScreen> {
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => SmokingHabits()),
+                    MaterialPageRoute(builder: (context) => SmokingHabits(currentUser: widget.currentUser)),
                   );
                 },
                 style: ElevatedButton.styleFrom(

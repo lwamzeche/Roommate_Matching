@@ -6,6 +6,7 @@ import 'package:roomie_project/main/list_chat.dart';
 import 'package:roomie_project/main/my_profile.dart';
 import 'package:roomie_project/main/view_profile.dart';
 import 'matches.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class MyApp extends StatelessWidget {
   @override
@@ -22,6 +23,8 @@ class MyApp extends StatelessWidget {
 }
 
 class MainPage extends StatefulWidget {
+  // final User currentUser;
+  // MainPage({required this.currentUser});
   @override
   _MainPageState createState() => _MainPageState();
 }
@@ -73,17 +76,20 @@ class _MainPageState extends State<MainPage> {
     if (index == 0) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => MainPage()),
+        MaterialPageRoute(
+            builder: (context) => MainPage()), // Navigate to MyProfilePage
       );
     } else if (index == 1) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => MatchesPage()),
+        MaterialPageRoute(
+            builder: (context) => MatchesPage()), // Navigate to MyProfilePage
       );
     } else if (index == 2) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => MyChatsScreen()),
+        MaterialPageRoute(
+            builder: (context) => MyChatsScreen()), // Navigate to MyProfilePage
       );
     } else if (index == 3) {
       Navigator.pushReplacement(
@@ -96,12 +102,16 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Image.asset('assets/Roomie/LOGO.png', height: 30),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        elevation: 0,
+   appBar: AppBar(
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.end, // Aligns the logo to the right
+        children: [
+          Image.asset('assets/Roomie/LOGO.png', height: 30),
+        ],
       ),
+      backgroundColor: Colors.white,
+      elevation: 0,
+    ),
       body: profiles.isEmpty
           ? Center(child: CircularProgressIndicator())
           : Swiper(

@@ -2,10 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:roomie_project/main/main_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SurveySuccessScreen extends StatelessWidget {
+  final User currentUser;
+  SurveySuccessScreen({required this.currentUser});
   @override
   Widget build(BuildContext context) {
+    print("Current user's ID: ${currentUser.uid}");
     return Scaffold(
       backgroundColor: Colors.blue,
       body: Column(
