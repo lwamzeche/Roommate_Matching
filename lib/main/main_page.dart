@@ -36,6 +36,7 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
+    print("Firebase User ID: ${FirebaseAuth.instance.currentUser!.uid}");
     fetchProfilesFromFirestore();
   }
 
@@ -102,12 +103,16 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Image.asset('assets/Roomie/LOGO.png', height: 30),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        elevation: 0,
+   appBar: AppBar(
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.end, // Aligns the logo to the right
+        children: [
+          Image.asset('assets/Roomie/LOGO.png', height: 30),
+        ],
       ),
+      backgroundColor: Colors.white,
+      elevation: 0,
+    ),
       body: profiles.isEmpty
           ? Center(child: CircularProgressIndicator())
           : Swiper(
