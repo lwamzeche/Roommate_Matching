@@ -36,7 +36,6 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
-    print("Firebase User ID: ${FirebaseAuth.instance.currentUser!.uid}");
     fetchProfilesFromFirestore();
   }
 
