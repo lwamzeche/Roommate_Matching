@@ -125,15 +125,13 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 style: TextStyle(fontSize: 16),
               ),
               SizedBox(height: 16), // Space before bio heading
-              Padding (
-                padding: EdgeInsets.only(right: 350),
-              child: Column(
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [ Text(
                 "Bio",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ) ],
-              ),),
+              ),
               SizedBox(height: 8), // Space between bio heading and bio text
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16),

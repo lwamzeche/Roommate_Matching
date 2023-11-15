@@ -71,7 +71,7 @@ class RoomieSuccessPage extends StatelessWidget {
                         builder: (context) => RoomatePreferenceScreen(currentUser: currentUser!)),
                     );
                 },
-                child: Text('Continue',
+                child: Text('Next',
                     style: TextStyle(
                         fontSize: 18)), 
                     ),

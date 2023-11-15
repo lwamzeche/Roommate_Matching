@@ -69,12 +69,10 @@ class _MBTIScreenState extends State<MBTIScreen> {
                 'INTJ',
                 'INTP',
                 'INFJ',
-                'INTJ',
                 'ISTP',
                 'ISFP',
                 'ISFJ',
                 'INFP',
-                'INTP',
                 'ESTP',
                 'ESFP',
                 'ENFP',
@@ -83,6 +81,7 @@ class _MBTIScreenState extends State<MBTIScreen> {
                 'ESFJ',
                 'ENFJ',
                 'ENTJ',
+                'Do not know',
               ].map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
@@ -99,8 +98,7 @@ class _MBTIScreenState extends State<MBTIScreen> {
               onPressed: () {
                 if (widget.currentUser?.uid != null) {
                   print("selectedGender: $_selectedGender");
-                  FirestoreService.updateUserData(widget.currentUser.uid,
-                      "MBTI", _selectedGender ?? 'INFP');
+                  FirestoreService.updateUserData(widget.currentUser.uid, "MBTI", _selectedGender?? 'INFP');
                 }
                 Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => SurveyScreen(currentUser: widget.currentUser)),
