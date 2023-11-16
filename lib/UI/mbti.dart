@@ -97,7 +97,6 @@ class _MBTIScreenState extends State<MBTIScreen> {
             ElevatedButton(
               onPressed: () {
                 if (widget.currentUser?.uid != null) {
-                  print("selectedGender: $_selectedGender");
                   FirestoreService.updateUserData(widget.currentUser.uid, "MBTI", _selectedGender?? 'INFP');
                 }
                 Navigator.of(context).push(

@@ -57,7 +57,6 @@ class _MyProfilePageState extends State<MyProfilePage> {
           .get();
 
       if (userDoc.exists) {
-        print("User profile found");
         Map<String, dynamic> data = userDoc.data() as Map<String, dynamic>;
         setState(() {
           myProfile = MyProfile(

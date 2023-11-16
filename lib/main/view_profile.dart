@@ -3,6 +3,7 @@ import 'main_page.dart';
 import 'dart:io' show Platform;
 
 
+
 class ViewProfilePage extends StatelessWidget {
   final UserProfile userProfile;
 
@@ -128,12 +129,10 @@ Widget _buildDetailsSection() {
     children: <Widget>[
       Padding(
         padding: EdgeInsets.only(left: 16.0, top: 16.0),
-        child: Flexible(
         child: Text(
           "${userProfile.name ?? 'User'}'s Preferences in Roommates",
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
-       ),
       ),
       ],
     );

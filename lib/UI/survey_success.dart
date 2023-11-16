@@ -9,7 +9,6 @@ class SurveySuccessScreen extends StatelessWidget {
   SurveySuccessScreen({required this.currentUser});
   @override
   Widget build(BuildContext context) {
-    print("Current user's ID: ${currentUser.uid}");
     return Scaffold(
       backgroundColor: Colors.blue,
       body: Column(

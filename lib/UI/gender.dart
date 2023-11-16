@@ -81,7 +81,6 @@ class _GenderScreenState extends State<GenderScreen> {
             ElevatedButton(
               onPressed: () {
                 if (widget.currentUser?.uid != null) {
-                  print("selectedGender: $_selectedGender");
                   FirestoreService.updateUserData(widget.currentUser.uid, "Gender", _selectedGender ?? 'Male');
                 }
                 Navigator.of(context).push(

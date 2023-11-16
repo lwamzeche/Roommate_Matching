@@ -95,7 +95,6 @@ class _DormitoryScreenState extends State<DormitoryScreen> {
             ElevatedButton(
               onPressed: () {
                 if (widget.currentUser?.uid != null) {
-                  print("selectedGender: $_selectedGender");
                   FirestoreService.updateUserData(widget.currentUser.uid, "Dormitory", _selectedGender?? 'N/A');
                 }
                 Navigator.of(context).push(

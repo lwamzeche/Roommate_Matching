@@ -80,7 +80,6 @@ class _ProgramScreenState extends State<ProgramScreen> {
             ElevatedButton(
               onPressed: () {
                 if (widget.currentUser?.uid != null) {
-                  print("selectedGender: $_selectedGender");
                   FirestoreService.updateUserData(widget.currentUser.uid, "School Program", _selectedGender?? 'Undergraduate');
                 }
                 Navigator.of(context).push(
