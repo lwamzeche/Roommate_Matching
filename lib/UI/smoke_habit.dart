@@ -120,6 +120,9 @@ class _SmokingHabitsState extends State<SmokingHabits> {
               alignment: Alignment.bottomCenter,
               child: ElevatedButton(
                 onPressed: () {
+                  if (widget.currentUser?.uid != null) {
+                    FirestoreService.updateUserData(widget.currentUser.uid, "roommatePreferenceSmoking", _selectedHabit ?? 'Non-smoker');
+                  };
                   Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) => GamingHabit(currentUser: widget.currentUser)),
                   );

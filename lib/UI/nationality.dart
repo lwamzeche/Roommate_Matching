@@ -113,6 +113,9 @@ class _NationalityState extends State<Nationality> {
               alignment: Alignment.bottomCenter,
               child: ElevatedButton(
                 onPressed: () {
+                  if (widget.currentUser?.uid != null) {
+                    FirestoreService.updateUserData(widget.currentUser.uid, "roommatePreferenceNationality", _selectedHabit ?? 'International');
+                  };
                   Navigator.of(context).push(
                     MaterialPageRoute(
                         builder: (context) => SurveySuccessScreen(currentUser: widget.currentUser)),
