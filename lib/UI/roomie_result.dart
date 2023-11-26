@@ -69,6 +69,13 @@ class _RoomieSuccessPageState extends State<RoomieSuccessPage> {
           .doc(roomieString) // Using the constructed string
           .get();
 
+      if (!roomieDoc.exists) {
+        roomieDoc = await FirebaseFirestore.instance
+          .collection('roomieInfo')
+          .doc("NOE")
+          .get();
+      }
+
       if (roomieDoc.exists) {
         setState(() {
           roomieName = roomieDoc['roomieName'];
