@@ -3,11 +3,12 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import '../UI/sleep_habit.dart';
+import 'retake_page.dart';
 import 'list_chat.dart';
 import 'main_page.dart';
 import 'matches.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'edit_profile.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -101,8 +102,16 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 child: Padding(
                   padding: EdgeInsets.only(right: 16, top: 10),
                   child: TextButton(
-                    onPressed: () {
-                      // TODO: Edit implementation should be here but i dont have time and it is not essential
+                    onPressed: ()  async {
+                      bool? result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditProfilePage(currentUser: FirebaseAuth.instance.currentUser!),
+                      ),
+                    );
+                    if (result == true) {
+                      fetchUserProfile(); // Refresh the profile data
+                      }
                     },
                     child: Text('Edit', style: TextStyle(color: Colors.blue)),
                   ),
@@ -124,21 +133,34 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 style: TextStyle(fontSize: 16),
               ),
               SizedBox(height: 16), // Space before bio heading
-              Column(
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child:
+              Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [ Text(
                 "Bio",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ) ],
-              ),
+              )),
               SizedBox(height: 8), // Space between bio heading and bio text
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Text(
-                  myProfile!.bio ?? 'No Bio',
-                  style: TextStyle(fontSize: 16),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        myProfile!.bio ?? 'No Bio',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                  ],
+                )
+                // child: Text(
+                //   myProfile!.bio ?? 'No Bio',
+                //   style: TextStyle(fontSize: 16),
                 ),
-              ),
               SizedBox(height: 40), // Space at the bottom
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
@@ -153,7 +175,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => SleepHabitScreen(currentUser: FirebaseAuth.instance.currentUser!)),
+                          MaterialPageRoute(builder: (context) => RetakePage(currentUser: FirebaseAuth.instance.currentUser!)),
                         );
                       },
                       style: ElevatedButton.styleFrom(
