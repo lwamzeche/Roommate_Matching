@@ -20,11 +20,7 @@ class _MatchesPageState extends State<MatchesPage> {
   int _selectedIndex = 1;
   late final String currentUserId;
 
-  final Map<String, String> currentUserPreferences = {
-    'sleepingHabit': 'Early bird',
-    'smokingHabit': 'Non-smoker',
-    'timeInDorm': 'Sometimes'
-  };
+  Map<String, String> currentUserPreferences = {};
 
   @override
   void initState() {
@@ -33,6 +29,28 @@ class _MatchesPageState extends State<MatchesPage> {
     _userProfiles = FirebaseFirestore.instance.collection('userProfiles');
     super.initState();
     currentUserId = Uuid().v4();
+    _fetchCurrentUserPreferences();
+  }
+
+  Future<void> _fetchCurrentUserPreferences() async {
+    try {
+      DocumentSnapshot snapshot =
+          await _firestore.collection('userProfiles').doc(currentUserId).get();
+      Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+
+      setState(() {
+        // Update preferences based on the numeric scale
+        currentUserPreferences['sleepingHabit'] =
+            (data['roomieSleep'] as int) >= 2 ? "Night Owl" : "Early Bird";
+        currentUserPreferences['smokingHabit'] =
+            (data['roomieBio'] as int) >= 2 ? "Smoker" : "Non-smoker";
+        currentUserPreferences['timeInDorm'] =
+            (data['roomieDormTime'] as int) >= 2 ? "All the time" : "Never";
+      });
+    } catch (e) {
+      print("Error fetching user preferences: $e");
+      // Handle the error or set default preferences
+    }
   }
 
   Stream<List<UserProfile>> _getMatches() {
@@ -66,9 +84,9 @@ class _MatchesPageState extends State<MatchesPage> {
     if (profile.timeInDorm == preferences['timeInDorm'])
       score += weightTimeInDorm;
 
-    double randomFactor =
-        Random().nextDouble() * 0.2; // Random value between 0.0 and 0.2
-    score += randomFactor;
+    // double randomFactor =
+    //     Random().nextDouble() * 0.2; // Random value between 0.0 and 0.2
+    // score += randomFactor;
 
     if (score > 1.0) score = 1.0;
 
