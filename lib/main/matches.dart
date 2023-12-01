@@ -128,6 +128,15 @@ class _MatchesPageState extends State<MatchesPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('My Matches'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => MainPage()),
+            );
+          },
+        ),
       ),
       body: StreamBuilder<List<UserProfile>>(
         stream: _getMatches(),

@@ -79,6 +79,15 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('My Chats'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => MainPage()),
+            );
+          },
+        ),
       ),
       body: ListView.builder(
         itemCount: matches.length,

@@ -13,7 +13,6 @@ import 'edit_profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MyProfilePage extends StatefulWidget {
-
   @override
   _MyProfilePageState createState() => _MyProfilePageState();
 }
@@ -43,12 +42,14 @@ class _MyProfilePageState extends State<MyProfilePage> {
         break;
     }
   }
+
   MyProfile? myProfile;
   @override
   void initState() {
     super.initState();
     fetchUserProfile();
   }
+
   Future<void> fetchUserProfile() async {
     String? userId = FirebaseAuth.instance.currentUser?.uid;
     try {
@@ -76,121 +77,139 @@ class _MyProfilePageState extends State<MyProfilePage> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     appBar: AppBar(
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.end, // Aligns the logo to the right
-        children: [
-          Image.asset('assets/Roomie/LOGO.png', height: 30),
-        ],
-      ),
-      backgroundColor: Colors.white,
-      elevation: 0,
-    ),
-    body: myProfile == null
-      ? Center(child: Text("No user profile data"))
-      : SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Align(
-                alignment: Alignment.centerRight,
-                child: Padding(
-                  padding: EdgeInsets.only(right: 16, top: 10),
-                  child: TextButton(
-                    onPressed: ()  async {
-                      bool? result = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => EditProfilePage(currentUser: FirebaseAuth.instance.currentUser!),
-                      ),
-                    );
-                    if (result == true) {
-                      fetchUserProfile(); // Refresh the profile data
-                      }
-                    },
-                    child: Text('Edit', style: TextStyle(color: Colors.blue)),
-                  ),
-                ),
-              ),
-              CircleAvatar(
-                radius: 60,
-                backgroundImage: NetworkImage(myProfile!.imageUrl ?? 'https://via.placeholder.com/150'),
-                backgroundColor: Colors.grey[200],
-              ),
-              SizedBox(height: 16),
-              Text(
-                "${myProfile!.name ?? 'No Name'}, ${myProfile!.age} yrs",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 8), // Space between name/age and department
-              Text(
-                myProfile!.department ?? 'Department',
-                style: TextStyle(fontSize: 16),
-              ),
-              SizedBox(height: 16), // Space before bio heading
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child:
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [ Text(
-                "Bio",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ) ],
-              )),
-              SizedBox(height: 8), // Space between bio heading and bio text
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        myProfile!.bio ?? 'No Bio',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ),
-                  ],
-                )
-                // child: Text(
-                //   myProfile!.bio ?? 'No Bio',
-                //   style: TextStyle(fontSize: 16),
-                ),
-              SizedBox(height: 40), // Space at the bottom
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Retake test",
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => RetakePage(currentUser: FirebaseAuth.instance.currentUser!)),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.blue,
-                        onPrimary: Colors.white,
-                      ),
-                      child: Text('Retake'),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 20), // Space at the bottom
-            ],
-          ),
+      appBar: AppBar(
+        title: Row(
+          mainAxisAlignment:
+              MainAxisAlignment.end, // Aligns the logo to the right
+          children: [
+            Image.asset('assets/Roomie/LOGO.png', height: 30),
+          ],
         ),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.blue),
+          onPressed: () {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => MainPage()),
+            );
+          },
+        ),
+      ),
+      body: myProfile == null
+          ? Center(child: Text("No user profile data"))
+          : SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: EdgeInsets.only(right: 16, top: 10),
+                      child: TextButton(
+                        onPressed: () async {
+                          bool? result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EditProfilePage(
+                                  currentUser:
+                                      FirebaseAuth.instance.currentUser!),
+                            ),
+                          );
+                          if (result == true) {
+                            fetchUserProfile(); // Refresh the profile data
+                          }
+                        },
+                        child:
+                            Text('Edit', style: TextStyle(color: Colors.blue)),
+                      ),
+                    ),
+                  ),
+                  CircleAvatar(
+                    radius: 60,
+                    backgroundImage: NetworkImage(myProfile!.imageUrl ??
+                        'https://via.placeholder.com/150'),
+                    backgroundColor: Colors.grey[200],
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    "${myProfile!.name ?? 'No Name'}, ${myProfile!.age} yrs",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 8), // Space between name/age and department
+                  Text(
+                    myProfile!.department ?? 'Department',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  SizedBox(height: 16), // Space before bio heading
+                  Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Bio",
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          )
+                        ],
+                      )),
+                  SizedBox(height: 8), // Space between bio heading and bio text
+                  Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              myProfile!.bio ?? 'No Bio',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ),
+                        ],
+                      )
+                      // child: Text(
+                      //   myProfile!.bio ?? 'No Bio',
+                      //   style: TextStyle(fontSize: 16),
+                      ),
+                  SizedBox(height: 40), // Space at the bottom
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Retake test",
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => RetakePage(
+                                      currentUser:
+                                          FirebaseAuth.instance.currentUser!)),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.blue,
+                            onPrimary: Colors.white,
+                          ),
+                          child: Text('Retake'),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 20), // Space at the bottom
+                ],
+              ),
+            ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.blue,

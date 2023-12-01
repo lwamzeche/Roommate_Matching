@@ -16,6 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
+        iconTheme: IconThemeData(color: Colors.blue),
       ),
       home: MainPage(),
     );
@@ -73,23 +74,15 @@ class _MainPageState extends State<MainPage> {
     setState(() {
       _selectedIndex = index;
     });
-    if (index == 0) {
+    if (index == 1) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-            builder: (context) => MainPage()), // Navigate to MyProfilePage
-      );
-    } else if (index == 1) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) => MatchesPage()), // Navigate to MyProfilePage
+        MaterialPageRoute(builder: (context) => MatchesPage()),
       );
     } else if (index == 2) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-            builder: (context) => MyChatsScreen()), // Navigate to MyProfilePage
+        MaterialPageRoute(builder: (context) => MyChatsScreen()),
       );
     } else if (index == 3) {
       Navigator.pushReplacement(
@@ -102,16 +95,18 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-   appBar: AppBar(
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.end, // Aligns the logo to the right
-        children: [
-          Image.asset('assets/Roomie/LOGO.png', height: 30),
-        ],
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Row(
+          mainAxisAlignment:
+              MainAxisAlignment.end, // Aligns the logo to the right
+          children: [
+            Image.asset('assets/Roomie/LOGO.png', height: 30),
+          ],
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0,
       ),
-      backgroundColor: Colors.white,
-      elevation: 0,
-    ),
       body: profiles.isEmpty
           ? Center(child: CircularProgressIndicator())
           : Swiper(
