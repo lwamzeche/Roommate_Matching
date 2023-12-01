@@ -39,13 +39,20 @@ class _MatchesPageState extends State<MatchesPage> {
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
 
       setState(() {
-        // Update preferences based on the numeric scale
+        // Update preferences directly from the database values
         currentUserPreferences['sleepingHabit'] =
-            (data['roomieSleep'] as int) >= 2 ? "Night Owl" : "Early Bird";
+            data['roommatePreferenceSleep'] == "Early bird"
+                ? "Early bird"
+                : "Night Owl";
         currentUserPreferences['smokingHabit'] =
-            (data['roomieBio'] as int) >= 2 ? "Smoker" : "Non-smoker";
+            data['roommatePreferenceSmoking'] == "Smoker"
+                ? "Smoker"
+                : "Non-smoker";
         currentUserPreferences['timeInDorm'] =
-            (data['roomieDormTime'] as int) >= 2 ? "All the time" : "Never";
+            data['roommatePreferenceDormTime'] == "All the time"
+                ? "All the time"
+                : "sometimes";
+        // The nationality preference is not included in the score calculation
       });
     } catch (e) {
       print("Error fetching user preferences: $e");
@@ -73,8 +80,7 @@ class _MatchesPageState extends State<MatchesPage> {
     double score = 0.0;
 
     const weightSleepingHabit = 0.3;
-    const weightSmokingHabit =
-        0.4; // Smoking might be a deal breaker so it has a higher weight
+    const weightSmokingHabit = 0.4;
     const weightTimeInDorm = 0.3;
 
     if (profile.sleepingHabit == preferences['sleepingHabit'])
@@ -84,9 +90,9 @@ class _MatchesPageState extends State<MatchesPage> {
     if (profile.timeInDorm == preferences['timeInDorm'])
       score += weightTimeInDorm;
 
-    // double randomFactor =
-    //     Random().nextDouble() * 0.2; // Random value between 0.0 and 0.2
-    // score += randomFactor;
+    double randomFactor =
+        Random().nextDouble() * 0.2; // Random value between 0.0 and 0.2
+    score += randomFactor;
 
     if (score > 1.0) score = 1.0;
 
