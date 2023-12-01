@@ -39,20 +39,14 @@ class _MatchesPageState extends State<MatchesPage> {
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
 
       setState(() {
-        // Update preferences directly from the database values
+        currentUserGender = data['Gender']
+        // Update preferences based on the numeric scale
         currentUserPreferences['sleepingHabit'] =
-            data['roommatePreferenceSleep'] == "Early bird"
-                ? "Early bird"
-                : "Night Owl";
+            (data['roomieSleep'] as int) >= 2 ? "Night Owl" : "Early Bird";
         currentUserPreferences['smokingHabit'] =
-            data['roommatePreferenceSmoking'] == "Smoker"
-                ? "Smoker"
-                : "Non-smoker";
+            (data['roomieBio'] as int) >= 2 ? "Smoker" : "Non-smoker";
         currentUserPreferences['timeInDorm'] =
-            data['roommatePreferenceDormTime'] == "All the time"
-                ? "All the time"
-                : "sometimes";
-        // The nationality preference is not included in the score calculation
+            (data['roomieDormTime'] as int) >= 2 ? "All the time" : "Never";
       });
     } catch (e) {
       print("Error fetching user preferences: $e");
@@ -61,7 +55,7 @@ class _MatchesPageState extends State<MatchesPage> {
   }
 
   Stream<List<UserProfile>> _getMatches() {
-    return _userProfiles.snapshots().map((snapshot) {
+    return _userProfiles.where('Gender', isEqualTo: currentUserGender).snapshots().map((snapshot) {
       final userProfiles = snapshot.docs.map((doc) {
         return UserProfile.fromSnapshot(doc);
       }).toList();
@@ -80,7 +74,8 @@ class _MatchesPageState extends State<MatchesPage> {
     double score = 0.0;
 
     const weightSleepingHabit = 0.3;
-    const weightSmokingHabit = 0.4;
+    const weightSmokingHabit =
+        0.4; // Smoking might be a deal breaker so it has a higher weight
     const weightTimeInDorm = 0.3;
 
     if (profile.sleepingHabit == preferences['sleepingHabit'])
@@ -90,9 +85,9 @@ class _MatchesPageState extends State<MatchesPage> {
     if (profile.timeInDorm == preferences['timeInDorm'])
       score += weightTimeInDorm;
 
-    double randomFactor =
-        Random().nextDouble() * 0.2; // Random value between 0.0 and 0.2
-    score += randomFactor;
+    // double randomFactor =
+    //     Random().nextDouble() * 0.2; // Random value between 0.0 and 0.2
+    // score += randomFactor;
 
     if (score > 1.0) score = 1.0;
 
