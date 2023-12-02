@@ -120,6 +120,9 @@ class _GamingHabitsState extends State<GamingHabit> {
               alignment: Alignment.bottomCenter,
               child: ElevatedButton(
                 onPressed: () {
+                if (widget.currentUser?.uid != null) {
+                  FirestoreService.updateUserData(widget.currentUser.uid, "roommatePreferenceGaming", _selectedHabit ?? 'Non-gamer');
+                }
                   Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) => TimeInDorm(currentUser: widget.currentUser)),
                   );

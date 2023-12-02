@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:roomie_project/UI/survey_success.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import './firestore_service.dart';
+import 'ranking_values.dart';
+
 class Nationality extends StatefulWidget {
   final User currentUser;
   Nationality({required this.currentUser});
@@ -61,7 +63,7 @@ class _NationalityState extends State<Nationality> {
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                    builder: (context) => SurveySuccessScreen(currentUser: widget.currentUser)),
+                    builder: (context) => ReorderablePage(currentUser: widget.currentUser)),
               );
             },
             child: Text('Skip', style: TextStyle(color: Colors.black)),
@@ -118,7 +120,7 @@ class _NationalityState extends State<Nationality> {
                   };
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                        builder: (context) => SurveySuccessScreen(currentUser: widget.currentUser)),
+                        builder: (context) => ReorderablePage(currentUser: widget.currentUser)),
                   );
                 },
                 style: ElevatedButton.styleFrom(
