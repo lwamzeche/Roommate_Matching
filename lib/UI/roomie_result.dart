@@ -117,7 +117,7 @@ class _RoomieSuccessPageState extends State<RoomieSuccessPage> {
             SizedBox(height: 20), // Space between text and name
             Text(
               roomieName,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blue),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blue),
             ),
             SizedBox(height: 15), // Space between name and image
             // Image.asset(
@@ -137,15 +137,15 @@ class _RoomieSuccessPageState extends State<RoomieSuccessPage> {
             SizedBox(height: 15),
             Text(
               roomieExplanation,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blue),
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.blue),
             ),
             SizedBox(height: 20), // Space between image and description
             Padding(
               padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.1),
               child: Text(
                 roomieBio,
-                style: TextStyle(fontSize: 16),
-                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 15),
+                textAlign: TextAlign.justify,
               ),
             ),
             SizedBox(height: 30),
