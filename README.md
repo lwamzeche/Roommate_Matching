@@ -7,8 +7,8 @@ This repository contains the source code for the Roommate Matching mobile applic
 - `lib/main.dart`: The entry point of the application, initializing the Firebase app and running the main app widget.
 - `lib/main/main_page.dart`: Hosts the primary navigation, tab views and swappable cards.
 - `lib/UI/`: Contains the user interface elements and screens for the app, surveys, and user profiles.
-- `lib/UI/chat.dart`: Implements the chat interface and functionality.
-- `lib/UI/matches.dart`: Contains the logic for matching user profiles.
+- `lib/main/chat.dart`: Implements the chat interface and functionality.
+- `lib/main/matches.dart`: Contains the logic for matching user profiles.
 
 ## Firebase Integration
 - `cloud_firestore`: Used for storing and retrieving user data and preferences.
@@ -27,10 +27,6 @@ To run this project, ensure you have Flutter installed on your machine and a Fir
 ## Testing
 Tests can be found in the `test/` directory. Run tests using the `flutter test` command to ensure code quality and functionality.
 
-## Contribution
-Please read `CONTRIBUTING.md` for details on our code of conduct, and the process for submitting pull requests to us.
-
----
 
 This README is a brief overview of the app's structure and setup instructions. For more detailed information, please refer to the individual `.dart` files within the `lib/` directory.
 
