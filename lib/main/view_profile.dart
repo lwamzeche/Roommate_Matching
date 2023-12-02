@@ -136,7 +136,8 @@ Widget _buildDetailsSection() {
       Padding(
         padding: EdgeInsets.only(left: 16.0, top: 16.0),
         child: Text(
-          "${userProfile.name ?? 'User'}'s Preferences in Roommates",
+          // "${userProfile.name ?? 'User'}'s Preferences in Roommates",
+           "${_getFirstName(userProfile.name)}'s Preferences in Roomate",
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
       ),
@@ -184,6 +185,13 @@ Widget _buildLabel(String text) {
     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
   );
 }
+  String _getFirstName(String? fullName) {
+    if (fullName == null || fullName.isEmpty) {
+      return 'User';
+    }
+    return fullName.split(' ')[0]; // Split the string by space and take the first part
+  }
+
 
   Widget _buildRoomieHeading(){
     return Row (
@@ -192,7 +200,7 @@ Widget _buildLabel(String text) {
         Padding(
         padding: EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
         child: Text(
-          "${userProfile.name ?? 'User'}'s Roomie",
+           "${_getFirstName(userProfile.name)}'s Roomie",
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
          ),
         ),
@@ -228,7 +236,7 @@ Widget _buildLabel(String text) {
         child: Text(
           userProfile.roomieBio ?? 'Roomie Bio',
           style: TextStyle(fontSize: 16),
-          textAlign: TextAlign.center, //currently best way to allign roomie description
+          textAlign: TextAlign.justify, //currently best way to allign roomie description
         ),
       ),
        SizedBox(height: 10),

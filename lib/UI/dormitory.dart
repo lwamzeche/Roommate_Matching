@@ -95,7 +95,8 @@ class _DormitoryScreenState extends State<DormitoryScreen> {
             ElevatedButton(
               onPressed: () {
                 if (widget.currentUser?.uid != null) {
-                  FirestoreService.updateUserData(widget.currentUser.uid, "Dormitory", _selectedGender?? 'N/A');
+                  String dormitoryName = _selectedGender!.split(' ')[0];
+                  FirestoreService.updateUserData(widget.currentUser.uid, "Dormitory", dormitoryName);
                 }
                 Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => MBTIScreen(currentUser: widget.currentUser!)),
