@@ -15,9 +15,6 @@ class LoginScreen extends StatelessWidget {
         password: _passwordController.text,
       );
       if (userCredential.user != null) {
-        print('Login successful');
-        print(userCredential.user!.email);
-        print(userCredential.user!.uid);
         Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => UserTypeScreen(currentUser: userCredential.user!)),
         );

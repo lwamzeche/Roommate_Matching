@@ -121,6 +121,9 @@ class _TimeInDormState extends State<TimeInDorm> {
               alignment: Alignment.bottomCenter,
               child: ElevatedButton(
                 onPressed: () {
+                  if (widget.currentUser?.uid != null) {
+                    FirestoreService.updateUserData(widget.currentUser.uid, "roommatePreferenceDormTime", _selectedHabit ?? 'Sometimes in dorm');
+                  };
                   Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) => Nationality(currentUser: widget.currentUser)),
                   );

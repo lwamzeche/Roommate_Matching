@@ -17,11 +17,6 @@ class _UserTypeScreenState extends State<UserTypeScreen> {
   String selectedUserType = '';
 
   @override
-  // void initState() {
-  //   super.initState();
-  //   print("User ID: ${widget.currentUser?.uid}");
-  // }
-
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
 
@@ -73,7 +68,6 @@ class _UserTypeScreenState extends State<UserTypeScreen> {
             ElevatedButton(
             onPressed: () {
               if (widget.currentUser.uid != null) {
-                print("selectedUserType: $selectedUserType");
                 FirestoreService.updateUserData(widget.currentUser!.uid, "User Type", selectedUserType);
               }
               Navigator.of(context).push(

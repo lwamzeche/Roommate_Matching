@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'main_page.dart';
 import 'dart:io' show Platform;
 
-
 class ViewProfilePage extends StatelessWidget {
   final UserProfile userProfile;
-
 
   ViewProfilePage({Key? key, required this.userProfile}) : super(key: key);
 
@@ -29,7 +27,7 @@ class ViewProfilePage extends StatelessWidget {
             _buildLabelsSection(),
             Divider(),
             _buildRoomieHeading(),
-             _buildRoomieSection(context, screenSize),
+            _buildRoomieSection(context, screenSize),
             Divider(),
             _buildRoommatePreferencesSection(),
             _buildPreferencesSection(),
@@ -93,20 +91,20 @@ class ViewProfilePage extends StatelessWidget {
       ),
     );
   }
-Widget _buildDetailsSection() {
-  return Padding(
-    padding: EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
+
+  Widget _buildDetailsSection() {
+    return Padding(
+      padding: EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
           Text('All about ${userProfile.name ?? 'User'}',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
           SizedBox(height: 8), // Added space
         ],
-    ),
-  );
-}
-
+      ),
+    );
+  }
 
   Widget _buildLabelsSection() {
     return Padding(
@@ -124,113 +122,115 @@ Widget _buildDetailsSection() {
 
   Widget _buildRoommatePreferencesSection() {
     return Row(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: <Widget>[
-      Padding(
-        padding: EdgeInsets.only(left: 16.0, top: 16.0),
-        child: Flexible(
-        child: Text(
-          "${userProfile.name ?? 'User'}'s Preferences in Roommates",
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-       ),
-      ),
-      ],
-    );
-  }
-Widget _buildPreferencesSection() {
-  return Padding(
-    padding: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0, top: 10.0),
-    child: Column(
-      children: <Widget>[
-        Row(
-          children: <Widget>[
-            Expanded(child: _buildLabel(userProfile.sleepingHabit ?? 'Sleeping Habit')),
-            SizedBox(width: 2), // Space between labels
-            Expanded(child: _buildLabel(userProfile.timeInDorm ?? 'Time in Dorm')),
-          ],
-        ),
-        SizedBox(height: 2), // Space between rows
-        Row(
-          children: <Widget>[
-            Expanded(child: _buildLabel(userProfile.smokingHabit ?? 'Smoking Habit')),
-            SizedBox(width: 2), // Space between labels
-            Expanded(child: _buildLabel(userProfile.userType ?? 'International')),
-          ],
-        ),
-      ],
-    ),
-  );
-}
-
-
-
-Widget _buildLabel(String text) {
-  return Chip(
-    label: Text(
-      text,
-      style: TextStyle(
-        color: Colors.blue,
-        fontSize: 16, // Increased font size
-      ),
-    ),
-    backgroundColor: Colors.white,
-    shape: StadiumBorder(side: BorderSide(color: Colors.blue)),
-    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-  );
-}
-
-  Widget _buildRoomieHeading(){
-    return Row (
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
-        padding: EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
-        child: Text(
-          "${userProfile.name ?? 'User'}'s Roomie",
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-         ),
+          padding: EdgeInsets.only(left: 16.0, top: 16.0),
+          child: Text(
+            "Preferences in Roommates",
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPreferencesSection() {
+    return Padding(
+      padding:
+          EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0, top: 10.0),
+      child: Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Expanded(
+                  child: _buildLabel(
+                      userProfile.sleepingHabit ?? 'Sleeping Habit')),
+              SizedBox(width: 2), // Space between labels
+              Expanded(
+                  child: _buildLabel(userProfile.timeInDorm ?? 'Time in Dorm')),
+            ],
+          ),
+          SizedBox(height: 2), // Space between rows
+          Row(
+            children: <Widget>[
+              Expanded(
+                  child:
+                      _buildLabel(userProfile.smokingHabit ?? 'Smoking Habit')),
+              SizedBox(width: 2), // Space between labels
+              Expanded(
+                  child: _buildLabel(userProfile.userType ?? 'International')),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLabel(String text) {
+    return Chip(
+      label: Text(
+        text,
+        style: TextStyle(
+          color: Colors.blue,
+          fontSize: 16, // Increased font size
+        ),
+      ),
+      backgroundColor: Colors.white,
+      shape: StadiumBorder(side: BorderSide(color: Colors.blue)),
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+    );
+  }
+
+  Widget _buildRoomieHeading() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
+          child: Text(
+            "${userProfile.name ?? 'User'}'s Roomie",
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
         ),
       ],
     );
   }
 
   Widget _buildRoomieSection(BuildContext context, Size screenSize) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.center,
-    children: <Widget>[
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
         Padding(
           padding: EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
           child: Text(
             "${userProfile.roomieName ?? 'User'}",
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
         ),
-      ),
-      SizedBox(height: 8), // Space between heading and roomie name
-      Container(
-        width: MediaQuery.of(context).size.width * 0.9, 
-        padding: EdgeInsets.symmetric(horizontal: 16.0), 
-        child: userProfile.roomieImage != null 
-          ? Image.network(
-              userProfile.roomieImage!,
-              fit: BoxFit.cover, 
-            )
-          : SizedBox(height: 250, child: Placeholder()), 
-      ),
-      SizedBox(height: 30), // Space between roomie name and image
-      Padding(
-        padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.15), 
-        child: Text(
-          userProfile.roomieBio ?? 'Roomie Bio',
-          style: TextStyle(fontSize: 16),
-          textAlign: TextAlign.center, //currently best way to allign roomie description
+        SizedBox(height: 8), // Space between heading and roomie name
+        Container(
+          width: MediaQuery.of(context).size.width * 0.9,
+          padding: EdgeInsets.symmetric(horizontal: 16.0),
+          child: userProfile.roomieImage != null
+              ? Image.network(
+                  userProfile.roomieImage!,
+                  fit: BoxFit.cover,
+                )
+              : SizedBox(height: 250, child: Placeholder()),
         ),
-      ),
-       SizedBox(height: 10),
-    ],
-  );
+        SizedBox(height: 30), // Space between roomie name and image
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.15),
+          child: Text(
+            userProfile.roomieBio ?? 'Roomie Bio',
+            style: TextStyle(fontSize: 16),
+            textAlign: TextAlign
+                .center, //currently best way to allign roomie description
+          ),
+        ),
+        SizedBox(height: 10),
+      ],
+    );
+  }
 }
-
-}
-
-

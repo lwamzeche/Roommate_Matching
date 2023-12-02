@@ -1,27 +1,26 @@
 // ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors, library_private_types_in_public_api
-
 import 'package:flutter/material.dart';
-import './gaming_habit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import './firestore_service.dart';
+import '../UI/survey.dart';
+import '../UI/roomate_survey.dart';
 
-class SmokingHabits extends StatefulWidget {
+class RetakePage extends StatefulWidget {
   final User currentUser;
-  SmokingHabits({required this.currentUser});
+  RetakePage({required this.currentUser});
   @override
-  _SmokingHabitsState createState() => _SmokingHabitsState();
+  _RetakePageState createState() => _RetakePageState();
 }
 
-class _SmokingHabitsState extends State<SmokingHabits> {
-  String? _selectedHabit;
+class _RetakePageState extends State<RetakePage> {
+  String? _selectedTest;
 
-  Widget _buildSelectionOption(String habit) {
-    bool isSelected = _selectedHabit == habit;
+  Widget _buildSelectionOption(String test) {
+    bool isSelected = _selectedTest == test;
     return Expanded(
       child: InkWell(
         onTap: () {
           setState(() {
-            _selectedHabit = habit;
+            _selectedTest = test;
           });
         },
         child: Container(
@@ -34,7 +33,7 @@ class _SmokingHabitsState extends State<SmokingHabits> {
           ),
           alignment: Alignment.center,
           child: Text(
-            habit,
+            test,
             textAlign: TextAlign.center,
             style: TextStyle(
               color: isSelected ? Colors.white : Colors.blue,
@@ -48,12 +47,7 @@ class _SmokingHabitsState extends State<SmokingHabits> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> options = [
-      'Smoker',
-      'Non-smoker',
-      'Occasional',
-      'Does not matter'
-    ];
+    List<String> options = ['My Lifestyle', 'Roommate Preference'];
 
     return Scaffold(
       appBar: AppBar(
@@ -63,17 +57,6 @@ class _SmokingHabitsState extends State<SmokingHabits> {
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              // TODO: Handle skip action
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => GamingHabit(currentUser: widget.currentUser)),
-              );
-            },
-            child: Text('Skip', style: TextStyle(color: Colors.black)),
-          ),
-        ],
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
@@ -81,38 +64,16 @@ class _SmokingHabitsState extends State<SmokingHabits> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Lifestyle preference',
+              'What test are you retaking?',
               style: TextStyle(
                 fontSize: 28.0,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 8.0),
-            Text(
-              'Select your preferences in ideal roommate',
-              style: TextStyle(fontSize: 16.0),
-            ),
             SizedBox(height: 32.0),
-            Text(
-              'Their smoking habits',
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 24.0),
-            // First row of options
             Row(
               children: options
-                  .sublist(0, 2)
-                  .map((habit) => _buildSelectionOption(habit))
-                  .toList(),
-            ),
-            // Second row of options
-            Row(
-              children: options
-                  .sublist(2)
-                  .map((habit) => _buildSelectionOption(habit))
+                  .map((test) => _buildSelectionOption(test))
                   .toList(),
             ),
             Spacer(),
@@ -120,12 +81,19 @@ class _SmokingHabitsState extends State<SmokingHabits> {
               alignment: Alignment.bottomCenter,
               child: ElevatedButton(
                 onPressed: () {
-                  if (widget.currentUser?.uid != null) {
-                    FirestoreService.updateUserData(widget.currentUser.uid, "roommatePreferenceSmoking", _selectedHabit ?? 'Non-smoker');
-                  };
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => GamingHabit(currentUser: widget.currentUser)),
-                  );
+                  if (_selectedTest == 'My Lifestyle') {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => SurveyScreen(currentUser: widget.currentUser),
+                      ),
+                    );
+                  } else if (_selectedTest == 'Roommate Preference') {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => RoomatePreferenceScreen(currentUser: widget.currentUser),
+                      ),
+                    );
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   minimumSize: Size(double.infinity, 60), // Width and height

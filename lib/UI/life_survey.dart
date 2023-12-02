@@ -4,6 +4,9 @@ import 'sleep_habit.dart';
 import 'roomate_survey.dart';
 import 'roomie_result.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import './firestore_service.dart';
+
 
 
 class LifestyleSurveyScreen extends StatefulWidget {
@@ -16,6 +19,25 @@ class LifestyleSurveyScreen extends StatefulWidget {
 class _LifestyleSurveyScreenState extends State<LifestyleSurveyScreen> {
   final Map<String, int?> _responses = {};
 
+  void checkAndStoreResponses() {
+    _responses.forEach((question, answer) {
+      String firestoreField = "";
+      if (question == "I spend majority time in my dormitory room") {
+        firestoreField = "roomieDormTime";
+      } else if (question == "I generally go to sleep late at night") {
+        firestoreField = "roomieSleep";
+      } else if (question == "I am habitual smoker") {
+        firestoreField = "roomieSmoker";
+      }
+
+      if (firestoreField.isNotEmpty) {
+        FirestoreService.updateUserData(widget.currentUser.uid, firestoreField, answer?.toString() ?? 'Not Answered');
+      }
+
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     List<String> questions = [
@@ -24,7 +46,7 @@ class _LifestyleSurveyScreenState extends State<LifestyleSurveyScreen> {
       'I engage in activities that usually create significant amount of noise',
       'I am comfortable with sharing my personal things with my roommate',
       'My religious/cultural practice significantly affect my routine in dorm',
-      'I generally go to sleep late at night.',
+      'I generally go to sleep late at night',
       'I am habitual smoker',
       'I play noisy games in my room',
       'I spend majority time in my dormitory room',
@@ -73,6 +95,7 @@ class _LifestyleSurveyScreenState extends State<LifestyleSurveyScreen> {
               padding: const EdgeInsets.symmetric(vertical: 24.0),
               child: ElevatedButton(
                 onPressed: () {
+                  checkAndStoreResponses(); // Store responses
                   Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) => RoomieSuccessPage(currentUser: widget.currentUser)),
                   );

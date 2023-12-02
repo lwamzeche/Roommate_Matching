@@ -20,11 +20,7 @@ class _MatchesPageState extends State<MatchesPage> {
   int _selectedIndex = 1;
   late final String currentUserId;
 
-  final Map<String, String> currentUserPreferences = {
-    'sleepingHabit': 'Early bird',
-    'smokingHabit': 'Non-smoker',
-    'timeInDorm': 'Sometimes'
-  };
+  Map<String, String> currentUserPreferences = {};
 
   @override
   void initState() {
@@ -33,6 +29,35 @@ class _MatchesPageState extends State<MatchesPage> {
     _userProfiles = FirebaseFirestore.instance.collection('userProfiles');
     super.initState();
     currentUserId = Uuid().v4();
+    _fetchCurrentUserPreferences();
+  }
+
+  Future<void> _fetchCurrentUserPreferences() async {
+    try {
+      DocumentSnapshot snapshot =
+          await _firestore.collection('userProfiles').doc(currentUserId).get();
+      Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+
+      setState(() {
+        // Update preferences directly from the database values
+        currentUserPreferences['sleepingHabit'] =
+            data['roommatePreferenceSleep'] == "Early bird"
+                ? "Early bird"
+                : "Night Owl";
+        currentUserPreferences['smokingHabit'] =
+            data['roommatePreferenceSmoking'] == "Smoker"
+                ? "Smoker"
+                : "Non-smoker";
+        currentUserPreferences['timeInDorm'] =
+            data['roommatePreferenceDormTime'] == "All the time"
+                ? "All the time"
+                : "sometimes";
+        // The nationality preference is not included in the score calculation
+      });
+    } catch (e) {
+      print("Error fetching user preferences: $e");
+      // Handle the error or set default preferences
+    }
   }
 
   Stream<List<UserProfile>> _getMatches() {
@@ -55,8 +80,7 @@ class _MatchesPageState extends State<MatchesPage> {
     double score = 0.0;
 
     const weightSleepingHabit = 0.3;
-    const weightSmokingHabit =
-        0.4; // Smoking might be a deal breaker so it has a higher weight
+    const weightSmokingHabit = 0.4;
     const weightTimeInDorm = 0.3;
 
     if (profile.sleepingHabit == preferences['sleepingHabit'])
@@ -104,6 +128,15 @@ class _MatchesPageState extends State<MatchesPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('My Matches'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => MainPage()),
+            );
+          },
+        ),
       ),
       body: StreamBuilder<List<UserProfile>>(
         stream: _getMatches(),

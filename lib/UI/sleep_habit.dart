@@ -120,6 +120,9 @@ class _SleepHabitScreenState extends State<SleepHabitScreen> {
               alignment: Alignment.bottomCenter,
               child: ElevatedButton(
                 onPressed: () {
+                  if (widget.currentUser?.uid != null) {
+                    FirestoreService.updateUserData(widget.currentUser.uid, "roommatePreferenceSleep", _selectedHabit ?? 'Early bird');
+                  };
                   Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) => SmokingHabits(currentUser: widget.currentUser)),
                   );
