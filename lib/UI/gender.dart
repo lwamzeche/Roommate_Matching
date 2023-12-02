@@ -27,20 +27,20 @@ class _GenderScreenState extends State<GenderScreen> {
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => ProgramScreen(currentUser: widget.currentUser)),
-              );
-              // TODO: Implement skip functionality
-            },
-            child: Text(
-              'Skip',
-              style: TextStyle(color: Colors.blue),
-            ),
-          )
-        ],
+        // actions: <Widget>[
+        //   TextButton(
+        //     onPressed: () {
+        //       Navigator.of(context).push(
+        //         MaterialPageRoute(builder: (context) => ProgramScreen(currentUser: widget.currentUser)),
+        //       );
+        //       // TODO: Implement skip functionality
+        //     },
+        //     child: Text(
+        //       'Skip',
+        //       style: TextStyle(color: Colors.blue),
+        //     ),
+        //   )
+        // ],
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.1),

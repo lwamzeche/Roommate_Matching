@@ -61,17 +61,17 @@ class _LifestyleSurveyScreenState extends State<LifestyleSurveyScreen> {
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              // Handle skip action
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => RoomatePreferenceScreen(currentUser: widget.currentUser)),
-              );
-            },
-            child: Text('Skip', style: TextStyle(color: Colors.blue)),
-          ),
-        ],
+        // actions: [
+        //   TextButton(
+        //     onPressed: () {
+        //       // Handle skip action
+        //       Navigator.of(context).push(
+        //         MaterialPageRoute(builder: (context) => RoomatePreferenceScreen(currentUser: widget.currentUser)),
+        //       );
+        //     },
+        //     child: Text('Skip', style: TextStyle(color: Colors.blue)),
+        //   ),
+        // ],
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),

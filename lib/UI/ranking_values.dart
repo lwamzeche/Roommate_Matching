@@ -35,7 +35,7 @@ class _ReorderablePageState extends State<ReorderablePage> {
               );
             },
             child: Text(
-              'Skip',
+              'Take it Later',
               style: TextStyle(color: Colors.blue),
             ),
           )

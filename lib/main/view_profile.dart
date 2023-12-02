@@ -8,7 +8,13 @@ class ViewProfilePage extends StatelessWidget {
   final UserProfile userProfile;
 
 
-  ViewProfilePage({Key? key, required this.userProfile}) : super(key: key);
+  // ViewProfilePage({Key? key, required this.userProfile}) : super(key: key);
+
+    ViewProfilePage({Key? key, required this.userProfile}) : super(key: key) {
+    print("User Profile Details:");
+    print("Name: ${userProfile.name}");
+    print("Bio: ${userProfile.smokingHabit}");
+  }
 
   @override
   Widget build(BuildContext context) {

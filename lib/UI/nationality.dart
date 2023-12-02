@@ -66,7 +66,7 @@ class _NationalityState extends State<Nationality> {
                     builder: (context) => ReorderablePage(currentUser: widget.currentUser)),
               );
             },
-            child: Text('Skip', style: TextStyle(color: Colors.black)),
+            child: Text('Take it Later', style: TextStyle(color: Colors.blue)),
           ),
         ],
       ),
