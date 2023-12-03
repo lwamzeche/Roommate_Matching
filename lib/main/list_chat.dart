@@ -1,4 +1,5 @@
 // ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors, library_private_types_in_public_api
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
@@ -23,24 +24,42 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
   @override
   void initState() {
     super.initState();
-    currentUserId = Uuid().v4(); // Generate a random user ID for simulation
+    getCurrentUserId();
     _getMatches();
   }
 
+  void getCurrentUserId() {
+    // Replace with your method of getting the current user's ID from your auth system.
+    currentUserId = FirebaseAuth.instance.currentUser!.uid;
+  }
+
   void _getMatches() {
-    // Subscribe to the userProfiles collection
-    _firestore.collection('userProfiles').snapshots().listen((snapshot) {
-      final List<UserProfile> matchList = snapshot.docs.map((doc) {
-        return UserProfile.fromSnapshot(doc);
-      }).toList();
+    // Fetch matches for the current user
+    _firestore
+        .collection('matches')
+        .doc(currentUserId) // Use the current user's ID
+        .snapshots()
+        .listen((snapshot) {
+      if (snapshot.exists) {
+        Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+        List<dynamic> matchedUserIds = data['user2Id'] ?? [];
 
-      // Perform any sorting or filtering logic if needed
-      // For simplicity, we're not doing that here
-
-      // Update the matches list
-      setState(() {
-        matches = matchList;
-      });
+        // For each matched user ID, fetch the corresponding user profile
+        for (String userId in matchedUserIds) {
+          _firestore
+              .collection('userProfiles')
+              .doc(userId)
+              .get()
+              .then((userDoc) {
+            if (userDoc.exists) {
+              // Add the user profile to the matches list
+              setState(() {
+                matches.add(UserProfile.fromSnapshot(userDoc));
+              });
+            }
+          });
+        }
+      }
     });
   }
 
