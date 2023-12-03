@@ -99,6 +99,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
   Future<void> fetchUserProfile() async {
     String? userId = FirebaseAuth.instance.currentUser?.uid;
     try {
+      // Fetch the user's profile.
       DocumentSnapshot userDoc = await FirebaseFirestore.instance
           .collection('userProfiles')
           .doc(userId)
@@ -106,6 +107,29 @@ class _MyProfilePageState extends State<MyProfilePage> {
 
       if (userDoc.exists) {
         Map<String, dynamic> data = userDoc.data() as Map<String, dynamic>;
+
+        // Store roomieName to use it for fetching roomieBio.
+        String? roomieName = data['roomieName'];
+
+        // Initialize roomieBio to 'N/A'.
+        String roomieBio = 'N/A';
+
+        // If roomieName is provided, fetch roomieBio from roomieInfo.
+        if (roomieName != null && roomieName.isNotEmpty) {
+          DocumentSnapshot roomieDoc = await FirebaseFirestore.instance
+              .collection('roomieInfo')
+              .doc(roomieName)
+              .get();
+
+          // If roomieInfo is found, update roomieBio.
+          if (roomieDoc.exists) {
+            Map<String, dynamic> roomieData =
+                roomieDoc.data() as Map<String, dynamic>;
+            roomieBio = roomieData['roomieBio'] ?? 'N/A';
+          }
+        }
+
+        // Update the state with the fetched profile data and roomieBio.
         setState(() {
           myProfile = MyProfile(
             name: data['Name'],
@@ -119,9 +143,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 data['roommatePreferenceNationality'],
             roommatePreferenceSleep: data['roommatePreferenceSleep'],
             roommatePreferenceSmoking: data['roommatePreferenceSmoking'],
-            roomieName: data['roomieName'],
+            roomieName: roomieName,
             roomieImage: data['roomieImage'],
-            roomieBio: data['roomieBio'],
+            roomieBio: roomieBio, // Set the roomieBio from roomieInfo.
           );
         });
       } else {
@@ -136,6 +160,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Row(
           mainAxisAlignment:
               MainAxisAlignment.end, // Aligns the logo to the right
@@ -145,14 +170,14 @@ class _MyProfilePageState extends State<MyProfilePage> {
         ),
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.blue),
-          onPressed: () {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => MainPage()),
-            );
-          },
-        ),
+        // leading: IconButton(
+        //   icon: Icon(Icons.arrow_back, color: Colors.blue),
+        //   onPressed: () {
+        //     Navigator.of(context).pushReplacement(
+        //       MaterialPageRoute(builder: (context) => MainPage()),
+        //     );
+        //   },
+        // ),
       ),
       body: myProfile == null
           ? Center(child: Text("No user profile data"))
