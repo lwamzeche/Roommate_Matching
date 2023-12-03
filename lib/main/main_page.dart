@@ -33,39 +33,99 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
   List<UserProfile> profiles = [];
+  Map<String, dynamic> currentUserPreferences = {};
 
   @override
   void initState() {
     super.initState();
-    fetchProfilesFromFirestore();
+    fetchCurrentUserInfo();
+    // fetchProfilesFromFirestore();
+  }
+
+  Future<void> fetchCurrentUserInfo() async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    FirebaseAuth auth = FirebaseAuth.instance;
+    String uid = auth.currentUser!.uid;
+    DocumentSnapshot snapshot = await firestore.collection('userProfiles').doc(uid).get();
+    Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+    UserProfile currentUserProfile = UserProfile(
+      dormitory: data['Dormitory'],
+      userType: data['User Type'],
+      sleepingHabit: data['roommatePreferenceSleep'],
+      timeInDorm: data['roommatePreferenceDormTime'],
+      smokingHabit: data['roommatePreferenceDormSmoking'],
+      preferenceNationality: data['roommatePreferenceNationality'],
+    );
+    setState(() {
+      currentUserPreferences = {
+        'Dormitory': currentUserProfile.dormitory,
+        'User Type': currentUserProfile.userType,
+        'roommatePreferenceSleep': currentUserProfile.sleepingHabit,
+        'roommatePreferenceDormTime': currentUserProfile.timeInDorm,
+        'roommatePreferenceDormSmoking': currentUserProfile.smokingHabit,
+        'roommatePreferenceNationality': currentUserProfile.preferenceNationality,
+      };
+      debugPrint('Current user preferences: $currentUserPreferences'.toString());
+      fetchProfilesFromFirestore();
+    });
   }
 
   Future<void> fetchProfilesFromFirestore() async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
-    QuerySnapshot snapshot = await firestore.collection('userProfiles').get();
+    FirebaseAuth auth = FirebaseAuth.instance;
+    String currentUserUid = auth.currentUser!.uid;
 
-    List<UserProfile> fetchedProfiles = snapshot.docs.map((doc) {
+    DocumentSnapshot currentUserSnapshot = await firestore.collection('userProfiles').doc(currentUserUid).get();
+    Map<String, dynamic> currentUserData = currentUserSnapshot.data() as Map<String, dynamic>;
+    String currentUserGender = currentUserData['Gender'];
+
+    QuerySnapshot snapshot = await firestore.collection('userProfiles').get();
+    List<UserProfile> fetchedProfiles = [];
+
+    for (var doc in snapshot.docs) {
+      if (doc.id == currentUserUid) {
+        continue;
+      }
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-      return UserProfile(
+    if (data['Gender'] != currentUserGender) {
+      continue;
+    }
+    try {
+
+    // List<UserProfile> fetchedProfiles = snapshot.docs.map((doc) {
+    //   Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      UserProfile profile = UserProfile(
         name: data['Name'],
         age: data['Age'].toString(),
         bio: data['Bio'],
+        mbti: data['MBTI'],
         imageUrl: data['ImageUrl'],
         department: data['Department'],
         dormitory: data['Dormitory'],
-        mbti: data['MBTI'],
         schoolProgram: data['School Program'],
         userType: data['User Type'],
-        sleepingHabit: data['sleepingHabit'],
-        timeInDorm: data['timeInDorm'],
-        smokingHabit: data['smokingHabit'],
+        sleepingHabit: data['roommatePreferenceSleep'],
+        timeInDorm: data['roommatePreferenceDormTime'],
+        smokingHabit: data['roommatePreferenceSmoking'],
         roomieImage: data['roomieImage'],
         roomieName: data['roomieName'],
         roomieBio: data['roomieBio'],
+        preferenceNationality: data['roommatePreferenceNationality'],
       );
-    }).toList();
+
+      double match = calculateMatchPercentage(profile, currentUserPreferences);
+      profile.matchPercentage = match;
+      debugPrint('Match for ${profile.name}: $match%'); 
+      fetchedProfiles.add(profile);
+    // }).toList();
+    } catch (e) {
+      print('Error in fetchProfilesFromFirestore: $e');
+     }
+    }
 
     setState(() {
+      // result = calculateMatchPercentage(fetchedProfiles, currentUserPreferences);
+      // debugPrint(result.toString());
       profiles = fetchedProfiles;
     });
   }
@@ -90,6 +150,27 @@ class _MainPageState extends State<MainPage> {
         MaterialPageRoute(builder: (context) => MyProfilePage()),
       );
     }
+  }
+
+  double calculateMatchPercentage(UserProfile profile, Map<String, dynamic> preferences) {
+    // debugPrint('Preferences: $preferences'.toString()); // this is currentUser information
+    double matchPercentage = 0;
+    if (profile.dormitory == preferences['Dormitory']) {
+      matchPercentage += 0.2;
+    }
+    if (profile.preferenceNationality == preferences['User Type']) {
+      matchPercentage += 0.2;
+    }
+    if (profile.sleepingHabit == preferences['roommatePreferenceSleep']) {
+      matchPercentage += 0.2;
+    }
+    if (profile.timeInDorm == preferences['roommatePreferenceDormTime']) {
+      matchPercentage += 0.2;
+    }
+    if (profile.smokingHabit == preferences['roommatePreferenceSmoking']) {
+      matchPercentage += 0.2;
+    }
+    return matchPercentage;
   }
 
   @override
@@ -195,15 +276,9 @@ class ProfileCard extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.unfold_more,
-                        color: Colors.white,
-                        size: 18,
-                      ),
-                      SizedBox(width: 4),
                       Text(
-                        "match percentage is not defined",
-                        // "Match: ${(profile.matchPercentage * 100).toStringAsFixed(0)}%",
+                        // "match percentage is not defined",
+                        "Match: ${(profile.matchPercentage * 100).toStringAsFixed(0)}%",
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -323,6 +398,8 @@ class UserProfile {
   final String? roomieImage;
   final String? roomieName;
   final String? roomieBio;
+  final String? preferenceNationality;
+  double matchPercentage;
 
   UserProfile({
     this.name,
@@ -340,6 +417,8 @@ class UserProfile {
     this.roomieImage,
     this.roomieName,
     this.roomieBio,
+    this.preferenceNationality,
+    this.matchPercentage = 0.0,
   });
 }
 
