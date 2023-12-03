@@ -49,89 +49,97 @@ class  RoomatePreferenceScreen extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 8),
-            Flexible(
-              child: RichText(
-                text: TextSpan(
-                  children: [
-                    WidgetSpan(
-                      child: Container(
-                        padding: EdgeInsets.all(6), // Adjust padding as needed
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.blue,
-                        ),
-                        child: Text(
-                          '1',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
+            SizedBox(height: 15),
+            Container(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start, // Align items vertically to the center
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(8), // Adjust padding as needed
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.blue,
                     ),
-                    TextSpan(
-                      text: ' 5 questions\n',
+                    child: Text(
+                      '1',
                       style: TextStyle(
-                        color: Colors.blue,
-                        fontSize: titleFontSize,
+                        color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    TextSpan(
-                      text:
-                          'Enter your preference in your potential roomate',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: subtitleFontSize,
-                      ),
+                  ),
+                  SizedBox(width: 10), // Space between circle and text
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '5 questions',
+                          style: TextStyle(
+                            color: Colors.blue,
+                            fontSize: titleFontSize,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          'Enter your preference in your potential roommate',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: subtitleFontSize,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ),
-            SizedBox(height: 16),
-            Flexible(
-              child: RichText(
-                text: TextSpan(
-                  children: [
-                    WidgetSpan(
-                      child: Container(
-                        padding: EdgeInsets.all(6), // Adjust padding as needed
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.blue,
-                        ),
-                        child: Text(
-                          '2',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
+              ),
+              SizedBox(height: 20),
+              Container(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start, // Align items vertically to the center
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(8), // Adjust padding as needed
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.blue,
                     ),
-                    TextSpan(
-                      text: ' Find your match\n',
+                    child: Text(
+                      '2',
                       style: TextStyle(
-                        color: Colors.blue,
-                        fontSize: titleFontSize,
+                        color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    TextSpan(
-                      text:
+                  ),
+                  SizedBox(width: 10), // Space between circle and text
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Find your match',
+                          style: TextStyle(
+                            color: Colors.blue,
+                            fontSize: titleFontSize,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
                           'Our system will match you with the most compatible roommate',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: subtitleFontSize,
-                      ),
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: subtitleFontSize,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ),
-            Spacer(),
+              ),
+            SizedBox(height: 50),
             OutlinedButton(
               onPressed: () {
                 // TODO: Handle skip survey action
