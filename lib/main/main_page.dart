@@ -119,6 +119,7 @@ class _MainPageState extends State<MainPage> {
           sleepingHabit: data['roommatePreferenceSleep'],
           timeInDorm: data['roommatePreferenceDormTime'],
           smokingHabit: data['roommatePreferenceSmoking'],
+          gamingHabit: data['roommatePreferenceGaming'],
           roomieImage: data['roomieImage'],
           roomieName: data['roomieName'],
           roomieBio: data['roomieBio'],
@@ -467,6 +468,7 @@ class UserProfile {
   final String? roomieName;
   final String? roomieBio;
   final String? preferenceNationality;
+  final String? gamingHabit;
   final String id;
   double matchPercentage;
 
@@ -489,6 +491,7 @@ class UserProfile {
     this.preferenceNationality,
     required this.id,
     this.matchPercentage = 0.0,
+    this.gamingHabit,
   });
 
   factory UserProfile.fromDocument(DocumentSnapshot doc) {

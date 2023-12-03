@@ -67,18 +67,19 @@ class _MyProfilePageState extends State<MyProfilePage> {
             ),
           ),
         ),
-        SizedBox(height: 16),
+        SizedBox(height: 20),
         profile.roomieImage != null
             ? Center(
                 child: Image.network(profile.roomieImage!,
                     height: 200)) // Adjust the height as needed
             : Icon(Icons.account_circle, size: 200), // Placeholder icon
+        SizedBox(height: 20),
         Padding(
           padding: EdgeInsets.symmetric(
-              horizontal: MediaQuery.of(context).size.width * 0.15),
+              horizontal: MediaQuery.of(context).size.width * 0.2),
           child: Text(
             profile.roomieBio ?? 'N/A',
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.justify,
             style: TextStyle(
               fontSize: 16,
               height: 1.5,
@@ -248,6 +249,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                             child: Text(
                               myProfile!.bio ?? 'No Bio',
                               style: TextStyle(fontSize: 16),
+                              
                             ),
                           ),
                         ],
@@ -256,26 +258,31 @@ class _MyProfilePageState extends State<MyProfilePage> {
                       //   myProfile!.bio ?? 'No Bio',
                       //   style: TextStyle(fontSize: 16),
                       ),
+                  SizedBox(height: 16), // Space before preferences heading
+                  Divider(), // Spacer to push the preferences to the top
                   if (myProfile != null) ...[
                     Padding(
                       padding: EdgeInsets.fromLTRB(16, 32, 16, 8),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
                       child: Text(
                         "My Preferences in Roommates",
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
+                      ),
                       ),
                     ),
                     SizedBox(height: 8),
                     PreferencesWidget(
-                      title: 'DormTime Preference:',
+                      title: 'Time in Dorm',
                       value: myProfile!.roommatePreferenceDormTime ??
                           'Not specified',
                     ),
                     // Repeat this for each preference you want to show
                     PreferencesWidget(
-                      title: 'Gaming Preference:',
+                      title: 'Gaming',
                       value: myProfile!.roommatePreferenceGaming ??
                           'Not specified',
                     ),
@@ -285,20 +292,22 @@ class _MyProfilePageState extends State<MyProfilePage> {
                           'Not specified',
                     ),
                     PreferencesWidget(
-                      title: 'SleepingHabit Preference',
+                      title: 'Sleeping Habit',
                       value:
                           myProfile!.roommatePreferenceSleep ?? 'Not Specified',
                     ),
                     PreferencesWidget(
-                      title: 'SmokingHabit Preference',
+                      title: 'Smoking Habit',
                       value: myProfile!.roommatePreferenceSmoking ??
                           'Not specified',
                     ),
-
+                    SizedBox(height: 16), // Space before roomie section
+                    Divider(), // Spacer to push the preferences to the top
                     buildRoomieSection(myProfile!),
                   ],
 
-                  SizedBox(height: 40), // Space at the bottom
+                  SizedBox(height: 20), // Space at the bottom
+                  Divider(), // Spacer to push the preferences to the top
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16),
                     child: Row(

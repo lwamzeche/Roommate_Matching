@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'main_page.dart';
 import 'dart:io' show Platform;
+import 'my_profile.dart';
 
 class ViewProfilePage extends StatelessWidget {
   final UserProfile userProfile;
@@ -34,11 +35,10 @@ class ViewProfilePage extends StatelessWidget {
             _buildDetailsSection(),
             _buildLabelsSection(),
             Divider(),
+            _buildRoommatePreferencesSection(userProfile),
+            Divider(),
             _buildRoomieHeading(),
             _buildRoomieSection(context, screenSize),
-            Divider(),
-            _buildRoommatePreferencesSection(),
-            _buildPreferencesSection(),
           ],
         ),
       ),
@@ -128,53 +128,53 @@ class ViewProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildRoommatePreferencesSection() {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(left: 16.0, top: 16.0),
-          child: Text(
-            // "Preferences in Roommates",
-            "${_getFirstName(userProfile.name)}'s Preference in Roommate",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-        ),
-      ],
-    );
-  }
+  // Widget _buildRoommatePreferencesSection() {
+  //   return Row(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: <Widget>[
+  //       Padding(
+  //         padding: EdgeInsets.only(left: 16.0, top: 16.0),
+  //         child: Text(
+  //           // "Preferences in Roommates",
+  //           "${_getFirstName(userProfile.name)}'s Preference in Roommate",
+  //           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 
-  Widget _buildPreferencesSection() {
-    return Padding(
-      padding:
-          EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0, top: 10.0),
-      child: Column(
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Expanded(
-                  child: _buildLabel(
-                      userProfile.sleepingHabit ?? 'Sleeping Habit')),
-              SizedBox(width: 2), // Space between labels
-              Expanded(
-                  child: _buildLabel(userProfile.timeInDorm ?? 'Time in Dorm')),
-            ],
-          ),
-          SizedBox(height: 2), // Space between rows
-          Row(
-            children: <Widget>[
-              Expanded(
-                  child:
-                      _buildLabel(userProfile.smokingHabit ?? 'Smoking Habit')),
-              SizedBox(width: 2), // Space between labels
-              Expanded(
-                  child: _buildLabel(userProfile.userType ?? 'International')),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget _buildPreferencesSection() {
+  //   return Padding(
+  //     padding:
+  //         EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0, top: 10.0),
+  //     child: Column(
+  //       children: <Widget>[
+  //         Row(
+  //           children: <Widget>[
+  //             Expanded(
+  //                 child: _buildLabel(
+  //                     userProfile.sleepingHabit ?? 'Sleeping Habit')),
+  //             SizedBox(width: 2), // Space between labels
+  //             Expanded(
+  //                 child: _buildLabel(userProfile.timeInDorm ?? 'Time in Dorm')),
+  //           ],
+  //         ),
+  //         SizedBox(height: 2), // Space between rows
+  //         Row(
+  //           children: <Widget>[
+  //             Expanded(
+  //                 child:
+  //                     _buildLabel(userProfile.smokingHabit ?? 'Smoking Habit')),
+  //             SizedBox(width: 2), // Space between labels
+  //             Expanded(
+  //                 child: _buildLabel(userProfile.userType ?? 'International')),
+  //           ],
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget _buildLabel(String text) {
     return Chip(
@@ -214,6 +214,56 @@ class ViewProfilePage extends StatelessWidget {
     );
   }
 
+   Widget _buildRoommatePreferencesSection(UserProfile myProfile) {
+    return Column(
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.fromLTRB(16, 32, 16, 8),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              // "${_getFirstName(myProfile.name)'s Preference in Roommate",
+              "${_getFirstName(userProfile.name)}'s Preference in Roommate",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: 8),
+        PreferencesWidget(
+          title: 'Time in Dorm',
+          value: myProfile.timeInDorm ?? 'Not specified',
+        ),
+        SizedBox(height: 8),
+        PreferencesWidget(
+          title: 'Gaming',
+          value: myProfile!.gamingHabit ??
+              'Not specified',
+                    ),
+        SizedBox(height: 8),
+        PreferencesWidget(
+          title: 'Nationality',
+          value: myProfile.preferenceNationality ?? 'Not specified',
+        ),
+        SizedBox(height: 8),
+        PreferencesWidget(
+          title: 'Sleeping Habit',
+          value: myProfile.sleepingHabit ?? 'Not specified',
+        ),
+        SizedBox(height: 8),
+        PreferencesWidget(
+          title: 'Smoking Habit',
+          value: myProfile.smokingHabit ?? 'Not specified',
+        ),
+
+        SizedBox(height: 16),
+        Divider(),
+      ],
+    );
+  }
+
   Widget _buildRoomieSection(BuildContext context, Size screenSize) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -243,10 +293,10 @@ class ViewProfilePage extends StatelessWidget {
             userProfile.roomieBio ?? 'Roomie Bio',
             style: TextStyle(fontSize: 16),
             textAlign:
-                TextAlign.center, // Align the roomie description to the center
+                TextAlign.justify, // Align the roomie description to the center
           ),
         ),
-        SizedBox(height: 10),
+        SizedBox(height: 50),
       ],
     );
   }
