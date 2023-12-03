@@ -244,29 +244,58 @@ class ProfileCard extends StatelessWidget {
     );
   }
 
-  void _connectWithThem(BuildContext context) {
-    FirebaseFirestore.instance.collection('matches').add({
-      'user1Id':
-          FirebaseAuth.instance.currentUser!.uid, // ID of the current user
-      'user2Id': profile.id, // ID of the user to connect with
-      'matchPercentage': profile.matchPercentage, // Save the match percentage
-      'timestamp': FieldValue.serverTimestamp(),
-    }).then((value) {
-      print('Match with ${profile.name} added successfully');
-      // Optionally navigate to the matches page or show a success message
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => MatchesPage()),
-      );
-      // It might be better to show a dialog or snackbar to confirm the match was added
-      // instead of navigating away
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text('Match with ${profile.name} added successfully')),
-      );
+  void _connectWithThem(BuildContext context) async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    String user1Id =
+        FirebaseAuth.instance.currentUser!.uid; // ID of the current user
+    String user2Id = profile.id; // ID of the user to connect with
+    double matchPercentage = profile.matchPercentage; // Match percentage
+
+    DocumentReference userMatchesDoc =
+        firestore.collection('matches').doc(user1Id);
+
+    firestore.runTransaction((transaction) async {
+      DocumentSnapshot snapshot = await transaction.get(userMatchesDoc);
+
+      // If the document does not exist, create a new one with user2Id and matchPercentage in the list
+      if (!snapshot.exists) {
+        transaction.set(userMatchesDoc, {
+          'user2Id': [user2Id],
+          'matchPercentage': [
+            matchPercentage
+          ], // Store as an array of match percentages
+          'timestamp': FieldValue.serverTimestamp(),
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Match with $user2Id added successfully')),
+        );
+        return;
+      }
+
+      // If the document exists, update the list of user2Id and match percentages
+      Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+      List<dynamic> existingMatches = List.from(data['user2Id'] ?? []);
+      List<dynamic> matchPercentages = List.from(data['matchPercentage'] ?? []);
+
+      if (!existingMatches.contains(user2Id)) {
+        existingMatches.add(user2Id);
+        matchPercentages.add(
+            matchPercentage); // Add match percentage at the corresponding index
+        transaction.update(userMatchesDoc, {
+          'user2Id': existingMatches,
+          'matchPercentage':
+              matchPercentages // Update the array of match percentages
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Match with $user2Id added successfully')),
+        );
+      } else {
+        // If user2Id is already in the list, show a pop-up message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('$user2Id is already in your matches list')),
+        );
+      }
     }).catchError((error) {
-      print('Failed to add match: $error');
-      // Handle the error, such as displaying an error message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to add match: $error')),
       );

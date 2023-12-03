@@ -2,9 +2,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:uuid/uuid.dart';
-import 'dart:math';
-
 import 'chat.dart';
 import 'list_chat.dart';
 import 'main_page.dart';
@@ -35,29 +32,51 @@ class _MatchesPageState extends State<MatchesPage> {
   Stream<List<UserProfile>> _getMatches() {
     return _firestore
         .collection('matches')
-        .where('userIds', arrayContains: currentUserId)
+        .where(FieldPath.documentId,
+            isEqualTo:
+                currentUserId) // Make sure this is the correct document ID
         .snapshots()
         .asyncMap((QuerySnapshot matchSnapshot) async {
       List<UserProfile> matchedProfiles = [];
 
-      for (var matchDoc in matchSnapshot.docs) {
-        final matchData = matchDoc.data() as Map<String, dynamic>;
-        final otherUserId = matchData['user1Id'] == currentUserId
-            ? matchData['user2Id'] as String
-            : matchData['user1Id'] as String;
-        final matchPercentage = matchData['matchPercentage'] as double;
+      if (matchSnapshot.docs.isNotEmpty) {
+        final matchData =
+            matchSnapshot.docs.first.data() as Map<String, dynamic>;
+        final List<dynamic> matchedUserIds = matchData['user2Id'] ?? [];
+        final List<dynamic> matchPercentages =
+            matchData['matchPercentage'] ?? [];
 
-        // Fetch the user profile using the otherUserId
-        final userProfileSnapshot =
-            await _firestore.collection('userProfiles').doc(otherUserId).get();
-        if (userProfileSnapshot.exists) {
-          final userData = userProfileSnapshot.data() as Map<String, dynamic>;
-          matchedProfiles.add(UserProfile(
-            documentId: otherUserId,
-            imageUrl: userData['ImageUrl'] ?? 'https://via.placeholder.com/150',
-            name: userData['Name'] ?? 'Unavailable',
-            matchPercentage: matchPercentage,
-          ));
+        for (int i = 0; i < matchedUserIds.length; i++) {
+          final otherUserId = matchedUserIds[i];
+          // Handle the case where there are fewer percentages than user IDs
+          final matchPercentage = i < matchPercentages.length
+              ? (matchPercentages[i] as num).toDouble() *
+                  100 // Convert to percentage
+              : 0.0; // Default to 0 if no percentage is found
+
+          try {
+            final userProfileSnapshot = await _firestore
+                .collection('userProfiles')
+                .doc(otherUserId)
+                .get();
+
+            if (userProfileSnapshot.exists) {
+              final userData =
+                  userProfileSnapshot.data() as Map<String, dynamic>;
+              matchedProfiles.add(UserProfile(
+                documentId: otherUserId,
+                imageUrl:
+                    userData['ImageUrl'] ?? 'https://via.placeholder.com/150',
+                name: userData['Name'] ?? 'Unavailable',
+                matchPercentage:
+                    matchPercentage, // Now correctly retrieving the percentage
+              ));
+            } else {
+              print('User profile for ID $otherUserId does not exist.');
+            }
+          } catch (e) {
+            print('Error fetching profile for user ID $otherUserId: $e');
+          }
         }
       }
       return matchedProfiles;
