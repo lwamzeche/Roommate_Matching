@@ -1,4 +1,4 @@
-// ignore_for_file: library_private_types_in_public_api, prefer_const_constructors, prefer_const_literals_to_create_immutables, use_key_in_widget_constructors, curly_braces_in_flow_control_structures, unnecessary_brace_in_string_interps
+// ignore_for_file: library_private_types_in_public_api, prefer_const_constructors, prefer_const_literals_to_create_immutables, use_key_in_widget_constructors, curly_braces_in_flow_control_structures, unnecessary_brace_in_string_interps, unnecessary_cast
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -30,35 +30,6 @@ class _MatchesPageState extends State<MatchesPage> {
     _userProfiles = FirebaseFirestore.instance.collection('userProfiles');
     super.initState();
     currentUserId = FirebaseAuth.instance.currentUser!.uid;
-    _fetchCurrentUserPreferences();
-  }
-
-  Future<void> _fetchCurrentUserPreferences() async {
-    try {
-      DocumentSnapshot snapshot =
-          await _firestore.collection('userProfiles').doc(currentUserId).get();
-      Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
-
-      setState(() {
-        // Update preferences directly from the database values
-        currentUserPreferences['sleepingHabit'] =
-            data['roommatePreferenceSleep'] == "Early bird"
-                ? "Early bird"
-                : "Night Owl";
-        currentUserPreferences['smokingHabit'] =
-            data['roommatePreferenceSmoking'] == "Smoker"
-                ? "Smoker"
-                : "Non-smoker";
-        currentUserPreferences['timeInDorm'] =
-            data['roommatePreferenceDormTime'] == "All the time"
-                ? "All the time"
-                : "sometimes";
-        // The nationality preference is not included in the score calculation
-      });
-    } catch (e) {
-      print("Error fetching user preferences: $e");
-      // Handle the error or set default preferences
-    }
   }
 
   Stream<List<UserProfile>> _getMatches() {
@@ -69,28 +40,26 @@ class _MatchesPageState extends State<MatchesPage> {
         .asyncMap((QuerySnapshot matchSnapshot) async {
       List<UserProfile> matchedProfiles = [];
 
-      // Loop through all match documents.
       for (var matchDoc in matchSnapshot.docs) {
         final matchData = matchDoc.data() as Map<String, dynamic>;
-        final otherUserId = (matchData['userIds'] as List)
-            .firstWhere((id) => id != currentUserId);
+        final otherUserId = matchData['user1Id'] == currentUserId
+            ? matchData['user2Id'] as String
+            : matchData['user1Id'] as String;
+        final matchPercentage = matchData['matchPercentage'] as double;
 
-        // Get user profile details from the 'userProfiles' collection.
+        // Fetch the user profile using the otherUserId
         final userProfileSnapshot =
             await _firestore.collection('userProfiles').doc(otherUserId).get();
-        final userData = userProfileSnapshot.data() as Map<String, dynamic>?;
-
-        // If user profile exists, add to the list.
-        if (userData != null) {
+        if (userProfileSnapshot.exists) {
+          final userData = userProfileSnapshot.data() as Map<String, dynamic>;
           matchedProfiles.add(UserProfile(
             documentId: otherUserId,
             imageUrl: userData['ImageUrl'] ?? 'https://via.placeholder.com/150',
             name: userData['Name'] ?? 'Unavailable',
-            matchPercentage: matchData['matchPercentage']?.toDouble() ?? 0.0,
+            matchPercentage: matchPercentage,
           ));
         }
       }
-
       return matchedProfiles;
     });
   }
@@ -161,7 +130,7 @@ class _MatchesPageState extends State<MatchesPage> {
                     Text('Match: ${match.matchPercentage.toStringAsFixed(0)}%'),
                 trailing: ElevatedButton(
                   onPressed: () {
-                    // You would handle the chat logic here
+                    // handle the chat logic here
                   },
                   child: Text('Chat'),
                 ),
