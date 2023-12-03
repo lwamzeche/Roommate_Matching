@@ -46,9 +46,11 @@ class _MainPageState extends State<MainPage> {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     FirebaseAuth auth = FirebaseAuth.instance;
     String uid = auth.currentUser!.uid;
-    DocumentSnapshot snapshot = await firestore.collection('userProfiles').doc(uid).get();
+    DocumentSnapshot snapshot =
+        await firestore.collection('userProfiles').doc(uid).get();
     Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
     UserProfile currentUserProfile = UserProfile(
+      id: uid,
       dormitory: data['Dormitory'],
       userType: data['User Type'],
       sleepingHabit: data['roommatePreferenceSleep'],
@@ -63,9 +65,11 @@ class _MainPageState extends State<MainPage> {
         'roommatePreferenceSleep': currentUserProfile.sleepingHabit,
         'roommatePreferenceDormTime': currentUserProfile.timeInDorm,
         'roommatePreferenceDormSmoking': currentUserProfile.smokingHabit,
-        'roommatePreferenceNationality': currentUserProfile.preferenceNationality,
+        'roommatePreferenceNationality':
+            currentUserProfile.preferenceNationality,
       };
-      debugPrint('Current user preferences: $currentUserPreferences'.toString());
+      debugPrint(
+          'Current user preferences: $currentUserPreferences'.toString());
       fetchProfilesFromFirestore();
     });
   }
@@ -75,57 +79,66 @@ class _MainPageState extends State<MainPage> {
     FirebaseAuth auth = FirebaseAuth.instance;
     String currentUserUid = auth.currentUser!.uid;
 
-    DocumentSnapshot currentUserSnapshot = await firestore.collection('userProfiles').doc(currentUserUid).get();
-    Map<String, dynamic> currentUserData = currentUserSnapshot.data() as Map<String, dynamic>;
+    // Fetching the current user's profile data to compare with other profiles
+    DocumentSnapshot currentUserSnapshot =
+        await firestore.collection('userProfiles').doc(currentUserUid).get();
+    Map<String, dynamic> currentUserData =
+        currentUserSnapshot.data() as Map<String, dynamic>;
     String currentUserGender = currentUserData['Gender'];
 
+    // Fetching all user profiles from Firestore
     QuerySnapshot snapshot = await firestore.collection('userProfiles').get();
     List<UserProfile> fetchedProfiles = [];
 
     for (var doc in snapshot.docs) {
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+
+      // Skipping the current user's profile
       if (doc.id == currentUserUid) {
         continue;
       }
-      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-    if (data['Gender'] != currentUserGender) {
-      continue;
+
+      // Filtering out profiles with a different gender if needed
+      if (data['Gender'] != currentUserGender) {
+        continue;
+      }
+
+      try {
+        // Constructing a UserProfile object for each fetched profile
+        UserProfile profile = UserProfile(
+          id: doc.id, // Assigning the Firestore document ID to the profile
+          name: data['Name'],
+          age: data['Age'].toString(),
+          bio: data['Bio'],
+          mbti: data['MBTI'],
+          imageUrl: data['ImageUrl'],
+          department: data['Department'],
+          dormitory: data['Dormitory'],
+          schoolProgram: data['School Program'],
+          userType: data['User Type'],
+          sleepingHabit: data['roommatePreferenceSleep'],
+          timeInDorm: data['roommatePreferenceDormTime'],
+          smokingHabit: data['roommatePreferenceSmoking'],
+          roomieImage: data['roomieImage'],
+          roomieName: data['roomieName'],
+          roomieBio: data['roomieBio'],
+          preferenceNationality: data['roommatePreferenceNationality'],
+          matchPercentage: 0.0, // Initial match percentage set to 0.0
+        );
+
+        // Calculating the match percentage based on the current user's preferences
+        double match =
+            calculateMatchPercentage(profile, currentUserPreferences);
+        profile.matchPercentage = match;
+        debugPrint('Match for ${profile.name}: $match%');
+        fetchedProfiles.add(profile);
+      } catch (e) {
+        print('Error in fetchProfilesFromFirestore: $e');
+      }
     }
-    try {
 
-    // List<UserProfile> fetchedProfiles = snapshot.docs.map((doc) {
-    //   Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-      UserProfile profile = UserProfile(
-        name: data['Name'],
-        age: data['Age'].toString(),
-        bio: data['Bio'],
-        mbti: data['MBTI'],
-        imageUrl: data['ImageUrl'],
-        department: data['Department'],
-        dormitory: data['Dormitory'],
-        schoolProgram: data['School Program'],
-        userType: data['User Type'],
-        sleepingHabit: data['roommatePreferenceSleep'],
-        timeInDorm: data['roommatePreferenceDormTime'],
-        smokingHabit: data['roommatePreferenceSmoking'],
-        roomieImage: data['roomieImage'],
-        roomieName: data['roomieName'],
-        roomieBio: data['roomieBio'],
-        preferenceNationality: data['roommatePreferenceNationality'],
-      );
-
-      double match = calculateMatchPercentage(profile, currentUserPreferences);
-      profile.matchPercentage = match;
-      debugPrint('Match for ${profile.name}: $match%'); 
-      fetchedProfiles.add(profile);
-    // }).toList();
-    } catch (e) {
-      print('Error in fetchProfilesFromFirestore: $e');
-     }
-    }
-
+    // Updating the state with the fetched and processed profiles
     setState(() {
-      // result = calculateMatchPercentage(fetchedProfiles, currentUserPreferences);
-      // debugPrint(result.toString());
       profiles = fetchedProfiles;
     });
   }
@@ -152,7 +165,8 @@ class _MainPageState extends State<MainPage> {
     }
   }
 
-  double calculateMatchPercentage(UserProfile profile, Map<String, dynamic> preferences) {
+  double calculateMatchPercentage(
+      UserProfile profile, Map<String, dynamic> preferences) {
     // debugPrint('Preferences: $preferences'.toString()); // this is currentUser information
     double matchPercentage = 0;
     if (profile.dormitory == preferences['Dormitory']) {
@@ -231,7 +245,32 @@ class ProfileCard extends StatelessWidget {
   }
 
   void _connectWithThem(BuildContext context) {
-    print('Connect with ${profile.name}');
+    FirebaseFirestore.instance.collection('matches').add({
+      'user1Id':
+          FirebaseAuth.instance.currentUser!.uid, // ID of the current user
+      'user2Id': profile.id, // ID of the user to connect with
+      'matchPercentage': profile.matchPercentage, // Save the match percentage
+      'timestamp': FieldValue.serverTimestamp(),
+    }).then((value) {
+      print('Match with ${profile.name} added successfully');
+      // Optionally navigate to the matches page or show a success message
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => MatchesPage()),
+      );
+      // It might be better to show a dialog or snackbar to confirm the match was added
+      // instead of navigating away
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text('Match with ${profile.name} added successfully')),
+      );
+    }).catchError((error) {
+      print('Failed to add match: $error');
+      // Handle the error, such as displaying an error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to add match: $error')),
+      );
+    });
   }
 
   @override
@@ -399,6 +438,7 @@ class UserProfile {
   final String? roomieName;
   final String? roomieBio;
   final String? preferenceNationality;
+  final String id;
   double matchPercentage;
 
   UserProfile({
@@ -418,207 +458,13 @@ class UserProfile {
     this.roomieName,
     this.roomieBio,
     this.preferenceNationality,
+    required this.id,
     this.matchPercentage = 0.0,
   });
-}
 
-// class ProfileCard extends StatelessWidget {
-//   final UserProfile profile;
-//
-//   void _navigateToProfile(BuildContext context) {
-//     Navigator.of(context).push(
-//       MaterialPageRoute(
-//         builder: (context) => ViewProfilePage(userProfile: profile),
-//       ),
-//     );
-//   }
-//
-//   // Function to handle the connect action
-//   void _connectWithThem(BuildContext context) {
-//     // TODO: Implement the logic to add this profile to the matched page
-//     print('Connect with ${profile.name}');
-//   }
-//
-//   ProfileCard({required this.profile});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     // Determine the size of the screen for responsive layout
-//     final Size screenSize = MediaQuery.of(context).size;
-//
-//     return Card(
-//       elevation: 8.0,
-//       margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-//       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-//       child: InkWell(
-//         onTap: () => _navigateToProfile(context),
-//         child: Stack(
-//           children: [
-//             // Image
-//             ClipRRect(
-//               borderRadius: BorderRadius.circular(10.0),
-//               child: Image.network(
-//                 profile.imageUrl ?? 'https://via.placeholder.com/150',
-//                 width: double.infinity,
-//                 height: screenSize.height * 0.7, // 60% of the screen height
-//                 fit: BoxFit.cover,
-//               ),
-//             ),
-//             Positioned(
-//               top: 16, // Adjust the positioning as needed
-//               right: 16, // Adjust the positioning as needed
-//               child: InkWell(
-//                 onTap: () {
-//                   // TODO: Navigate to the full profile view
-//                   Navigator.of(context).push(
-//                     MaterialPageRoute(
-//                       builder: (context) =>
-//                           ViewProfilePage(userProfile: profile),
-//                     ),
-//                   );
-//                 },
-//                 child: Container(
-//                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-//                   decoration: BoxDecoration(
-//                     color: Colors.blue, // Use your brand color
-//                     borderRadius: BorderRadius.circular(20),
-//                     boxShadow: [
-//                       BoxShadow(
-//                         color: Colors.black26,
-//                         blurRadius: 4,
-//                         offset: Offset(0, 2),
-//                       ),
-//                     ],
-//                   ),
-//                   child: Row(
-//                     mainAxisSize: MainAxisSize.min,
-//                     children: [
-//                       Icon(
-//                         Icons.unfold_more, // Replace with a suitable icon
-//                         color: Colors.white,
-//                         size: 18,
-//                       ),
-//                       SizedBox(width: 1),
-//                     ],
-//                   ),
-//                 ),
-//               ),
-//             ),
-//
-//             // Blue information box
-//             Positioned(
-//               left: 0,
-//               right: 0,
-//               bottom: 0, // Align with the bottom of the card
-//               child: GestureDetector(
-//                 onTap: () {
-//                   Navigator.of(context).push(
-//                     MaterialPageRoute(
-//                       builder: (context) =>
-//                           ViewProfilePage(userProfile: profile),
-//                     ),
-//                   );
-//                 },
-//                 child: Container(
-//                   padding: EdgeInsets.symmetric(
-//                       horizontal:
-//                           10.0), // Horizontal padding for the entire blue box
-//                   decoration: BoxDecoration(
-//                     color: Colors.blue.withOpacity(0.9),
-//                     borderRadius: BorderRadius.circular(10.0),
-//                   ),
-//                   child: Column(
-//                     mainAxisSize: MainAxisSize.min,
-//                     children: [
-//                       Padding(
-//                         padding: EdgeInsets.all(
-//                             16.0), // Padding for the text elements
-//                         child: Column(
-//                           mainAxisSize: MainAxisSize.min,
-//                           children: [
-//                             // Centered Row for Name and Age
-//                             Row(
-//                               mainAxisAlignment: MainAxisAlignment.center,
-//                               children: [
-//                                 Text(
-//                                   '${profile.name ?? 'Unavailable'}, ${profile.age ?? 'N/A'} yrs',
-//                                   style: TextStyle(
-//                                       fontSize: 18,
-//                                       fontWeight: FontWeight.bold,
-//                                       color: Colors.white),
-//                                 ),
-//                               ],
-//                             ),
-//                             SizedBox(
-//                                 height:
-//                                     2), // Space between name/age and department
-//                             // Department Text with smaller font
-//                             Text(
-//                               profile.department ?? 'Department: Unavailable',
-//                               style: TextStyle(
-//                                   color: Colors.white,
-//                                   fontSize:
-//                                       16), // Smaller font size for department
-//                             ),
-//                             SizedBox(
-//                                 height:
-//                                     16), // Space between department and attributes
-//                             // Attributes Row
-//                             Wrap(
-//                               alignment: WrapAlignment.start,
-//                               spacing: 8.0, // Space between chips
-//                               children: [
-//                                 Chip(
-//                                   label:
-//                                       Text(profile.mbti ?? 'MBTI: Unavailable'),
-//                                   labelStyle: TextStyle(color: Colors.white),
-//                                   backgroundColor: Colors.blue.shade300,
-//                                 ),
-//                                 Chip(
-//                                   label: Text(profile.dormitory ??
-//                                       'Dormitory: Unavailable'),
-//                                   labelStyle: TextStyle(color: Colors.white),
-//                                   backgroundColor: Colors.blue.shade300,
-//                                 ),
-//                                 Chip(
-//                                   label: Text(profile.userType ??
-//                                       'User Type: Unavailable'),
-//                                   labelStyle: TextStyle(color: Colors.white),
-//                                   backgroundColor: Colors.blue.shade300,
-//                                 ),
-//                               ],
-//                             ),
-//                           ],
-//                         ),
-//                       ),
-//                       // Connect with them button
-//                       ElevatedButton(
-//                         onPressed: () => _connectWithThem(context),
-//                         style: ElevatedButton.styleFrom(
-//                           primary: Colors.white, // Button color
-//                           onPrimary: Colors.blue, // Text color
-//                           shape: RoundedRectangleBorder(
-//                             borderRadius: BorderRadius.circular(30.0),
-//                           ),
-//                           elevation: 0,
-//                           padding: EdgeInsets.symmetric(
-//                               horizontal: 30.0,
-//                               vertical: 8.0), // Button padding
-//                           textStyle: TextStyle(
-//                             fontWeight: FontWeight.bold,
-//                           ),
-//                         ),
-//                         child: Text('Connect with them'),
-//                       ),
-//                       SizedBox(height: 16), // Space below the button
-//                     ],
-//                   ),
-//                 ),
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
+  factory UserProfile.fromDocument(DocumentSnapshot doc) {
+    return UserProfile(
+      id: doc.id,
+    );
+  }
+}

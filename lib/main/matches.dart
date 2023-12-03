@@ -1,4 +1,5 @@
 // ignore_for_file: library_private_types_in_public_api, prefer_const_constructors, prefer_const_literals_to_create_immutables, use_key_in_widget_constructors, curly_braces_in_flow_control_structures, unnecessary_brace_in_string_interps
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
@@ -28,7 +29,7 @@ class _MatchesPageState extends State<MatchesPage> {
     _firestore = FirebaseFirestore.instance;
     _userProfiles = FirebaseFirestore.instance.collection('userProfiles');
     super.initState();
-    currentUserId = Uuid().v4();
+    currentUserId = FirebaseAuth.instance.currentUser!.uid;
     _fetchCurrentUserPreferences();
   }
 
@@ -61,42 +62,37 @@ class _MatchesPageState extends State<MatchesPage> {
   }
 
   Stream<List<UserProfile>> _getMatches() {
-    return _userProfiles.snapshots().map((snapshot) {
-      final userProfiles = snapshot.docs.map((doc) {
-        return UserProfile.fromSnapshot(doc);
-      }).toList();
+    return _firestore
+        .collection('matches')
+        .where('userIds', arrayContains: currentUserId)
+        .snapshots()
+        .asyncMap((QuerySnapshot matchSnapshot) async {
+      List<UserProfile> matchedProfiles = [];
 
-      // Calculate match score for each profile and sort them
-      userProfiles.sort((a, b) =>
-          _calculateMatchScore(b, currentUserPreferences)
-              .compareTo(_calculateMatchScore(a, currentUserPreferences)));
+      // Loop through all match documents.
+      for (var matchDoc in matchSnapshot.docs) {
+        final matchData = matchDoc.data() as Map<String, dynamic>;
+        final otherUserId = (matchData['userIds'] as List)
+            .firstWhere((id) => id != currentUserId);
 
-      return userProfiles; // return the sorted list
+        // Get user profile details from the 'userProfiles' collection.
+        final userProfileSnapshot =
+            await _firestore.collection('userProfiles').doc(otherUserId).get();
+        final userData = userProfileSnapshot.data() as Map<String, dynamic>?;
+
+        // If user profile exists, add to the list.
+        if (userData != null) {
+          matchedProfiles.add(UserProfile(
+            documentId: otherUserId,
+            imageUrl: userData['ImageUrl'] ?? 'https://via.placeholder.com/150',
+            name: userData['Name'] ?? 'Unavailable',
+            matchPercentage: matchData['matchPercentage']?.toDouble() ?? 0.0,
+          ));
+        }
+      }
+
+      return matchedProfiles;
     });
-  }
-
-  int _calculateMatchScore(
-      UserProfile profile, Map<String, String> preferences) {
-    double score = 0.0;
-
-    const weightSleepingHabit = 0.3;
-    const weightSmokingHabit = 0.4;
-    const weightTimeInDorm = 0.3;
-
-    if (profile.sleepingHabit == preferences['sleepingHabit'])
-      score += weightSleepingHabit;
-    if (profile.smokingHabit == preferences['smokingHabit'])
-      score += weightSmokingHabit;
-    if (profile.timeInDorm == preferences['timeInDorm'])
-      score += weightTimeInDorm;
-
-    double randomFactor =
-        Random().nextDouble() * 0.2; // Random value between 0.0 and 0.2
-    score += randomFactor;
-
-    if (score > 1.0) score = 1.0;
-
-    return (score * 100).toInt(); // Convert to percentage
   }
 
   void _onItemTapped(int index) {
@@ -145,53 +141,27 @@ class _MatchesPageState extends State<MatchesPage> {
             return Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error.toString()}'));
+            return Center(child: Text('Error: ${snapshot.error}'));
           }
-
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return Center(child: Text('No matches found'));
           }
-
           final matches = snapshot.data!;
           return ListView.builder(
             itemCount: matches.length,
             itemBuilder: (context, index) {
               final match = matches[index];
-              final matchScore =
-                  _calculateMatchScore(match, currentUserPreferences);
               return ListTile(
-                leading:
-                    CircleAvatar(backgroundImage: NetworkImage(match.imageUrl)),
+                leading: CircleAvatar(
+                  backgroundImage: NetworkImage(match.imageUrl),
+                  backgroundColor: Colors.transparent,
+                ),
                 title: Text(match.name),
                 subtitle:
-                    Text('Match: ${matchScore}%'), // Example score calculation
+                    Text('Match: ${match.matchPercentage.toStringAsFixed(0)}%'),
                 trailing: ElevatedButton(
                   onPressed: () {
-                    String matchedUserId = matches[index].documentId;
-                    // Generate the chatId
-                    List<String> ids = [currentUserId, matchedUserId];
-                    ids.sort(); // Ensure consistent order
-                    String chatId = ids.join('_');
-
-                    _firestore
-                        .collection('chats')
-                        .doc(chatId)
-                        .get()
-                        .then((chatDoc) {
-                      if (!chatDoc.exists) {
-                        _firestore.collection('chats').doc(chatId).set({
-                          'userIds': [currentUserId, matchedUserId],
-                          'timestamp': FieldValue.serverTimestamp(),
-                        });
-                      }
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ChatScreen(
-                              chatId: chatId, currentUserId: currentUserId),
-                        ),
-                      );
-                    });
+                    // You would handle the chat logic here
                   },
                   child: Text('Chat'),
                 ),
@@ -221,28 +191,23 @@ class UserProfile {
   final String documentId;
   final String imageUrl;
   final String name;
-  final String sleepingHabit;
-  final String smokingHabit;
-  final String timeInDorm;
+  final double matchPercentage;
 
   UserProfile({
     required this.documentId,
     required this.imageUrl,
     required this.name,
-    required this.sleepingHabit,
-    required this.smokingHabit,
-    required this.timeInDorm,
+    required this.matchPercentage,
   });
 
   factory UserProfile.fromSnapshot(DocumentSnapshot snapshot) {
     final data = snapshot.data() as Map<String, dynamic>;
     return UserProfile(
       documentId: snapshot.id,
-      imageUrl: data['ImageUrl'] as String? ?? '',
-      name: data['Name'] as String? ?? '',
-      sleepingHabit: data['sleepingHabit'] as String? ?? '',
-      smokingHabit: data['Smoker'] as String? ?? '',
-      timeInDorm: data['Sometimes in dorm'] as String? ?? '',
+      imageUrl:
+          data['ImageUrl'] as String? ?? 'https://via.placeholder.com/150',
+      name: data['Name'] as String? ?? 'Unavailable',
+      matchPercentage: data['MatchPercentage']?.toDouble() ?? 0.0,
     );
   }
 }
