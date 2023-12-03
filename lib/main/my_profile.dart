@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_print
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -67,6 +67,15 @@ class _MyProfilePageState extends State<MyProfilePage> {
             imageUrl: data['ImageUrl'],
             bio: data['Bio'],
             department: data['Department'],
+            roommatePreferenceDormTime: data['roommatePreferenceDormTime'],
+            roommatePreferenceGaming: data['roommatePreferenceGaming'],
+            roommatePreferenceNationality:
+                data['roommatePreferenceNationality'],
+            roommatePreferenceSleep: data['roommatePreferenceSleep'],
+            roommatePreferenceSmoking: data['roommatePreferenceSmoking'],
+            roomieName: data['roomieName'],
+            roomieImage: data['roomieImage'],
+            roomieBio: data['roomieBio'],
           );
         });
       } else {
@@ -176,6 +185,49 @@ class _MyProfilePageState extends State<MyProfilePage> {
                       //   myProfile!.bio ?? 'No Bio',
                       //   style: TextStyle(fontSize: 16),
                       ),
+                  if (myProfile != null) ...[
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "My Preferences in Roommates",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    PreferencesWidget(
+                      title: 'DormTime Preference:',
+                      value: myProfile!.roommatePreferenceDormTime ??
+                          'Not specified',
+                    ),
+                    // Repeat this for each preference you want to show
+                    PreferencesWidget(
+                      title: 'Gaming Preference:',
+                      value: myProfile!.roommatePreferenceGaming ??
+                          'Not specified',
+                    ),
+                    PreferencesWidget(
+                      title: 'Nationality',
+                      value: myProfile!.roommatePreferenceNationality ??
+                          'Not specified',
+                    ),
+                    PreferencesWidget(
+                      title: 'SleepingHabit Preference',
+                      value:
+                          myProfile!.roommatePreferenceSleep ?? 'Not Specified',
+                    ),
+                    PreferencesWidget(
+                      title: 'SmokingHabit Preference',
+                      value: myProfile!.roommatePreferenceSmoking ??
+                          'Not specified',
+                    ),
+                  ],
+
                   SizedBox(height: 40), // Space at the bottom
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16),
@@ -198,8 +250,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
                             );
                           },
                           style: ElevatedButton.styleFrom(
-                            primary: Colors.blue,
-                            onPrimary: Colors.white,
+                            foregroundColor: Colors.white,
+                            backgroundColor: Colors.blue,
                           ),
                           child: Text('Retake'),
                         ),
@@ -227,12 +279,95 @@ class _MyProfilePageState extends State<MyProfilePage> {
   }
 }
 
+class PreferencesWidget extends StatelessWidget {
+  final String title;
+  final String value;
+
+  const PreferencesWidget({
+    Key? key,
+    required this.title,
+    required this.value,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    // Choose a less bright blue color
+    final Color blueColor = Colors.blue.shade600;
+
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            flex: 1, // Reduced, so the title doesn't take too much space
+            child: Text(
+              title,
+              style: TextStyle(
+                color: Colors.black, // Title text color
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          SizedBox(width: 16), // Consistent spacing between title and value
+          Expanded(
+            flex: 2, // Increased, giving more width to the value box
+            child: Container(
+              alignment: Alignment.center,
+              padding: EdgeInsets.symmetric(
+                  vertical: 12.0, horizontal: 20.0), // Increased padding
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: blueColor, // Less bright blue color
+                  width: 2, // Consistent border width
+                ),
+                borderRadius: BorderRadius.circular(8.0), // Rounded corners
+              ),
+              child: Text(
+                value,
+                style: TextStyle(
+                  color: blueColor, // Less bright blue color
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class MyProfile {
   final String? name;
   final String? age;
   final String? imageUrl;
   final String? bio;
   final String? department;
+  final String? roomieName;
+  final String? roomieImage;
+  final String? roomieBio;
+  final String? roommatePreferenceDormTime;
+  final String? roommatePreferenceGaming;
+  final String? roommatePreferenceNationality;
+  final String? roommatePreferenceSleep;
+  final String? roommatePreferenceSmoking;
 
-  MyProfile({this.name, this.age, this.imageUrl, this.bio, this.department});
+  MyProfile({
+    this.name,
+    this.age,
+    this.imageUrl,
+    this.bio,
+    this.department,
+    this.roomieName,
+    this.roomieImage,
+    this.roomieBio,
+    this.roommatePreferenceDormTime,
+    this.roommatePreferenceGaming,
+    this.roommatePreferenceNationality,
+    this.roommatePreferenceSleep,
+    this.roommatePreferenceSmoking,
+  });
 }
