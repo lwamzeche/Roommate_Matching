@@ -43,6 +43,52 @@ class _MyProfilePageState extends State<MyProfilePage> {
     }
   }
 
+  Widget buildRoomieSection(MyProfile profile) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.fromLTRB(
+              16, 32, 16, 8), // Adjust the padding as needed
+          child: Text(
+            "My Roomie",
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        Center(
+          child: Text(
+            profile.roomieName ?? 'N/A',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        SizedBox(height: 16),
+        profile.roomieImage != null
+            ? Center(
+                child: Image.network(profile.roomieImage!,
+                    height: 200)) // Adjust the height as needed
+            : Icon(Icons.account_circle, size: 200), // Placeholder icon
+        Padding(
+          padding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width * 0.15),
+          child: Text(
+            profile.roomieBio ?? 'N/A',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 16,
+              height: 1.5,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   MyProfile? myProfile;
   @override
   void initState() {
@@ -187,15 +233,12 @@ class _MyProfilePageState extends State<MyProfilePage> {
                       ),
                   if (myProfile != null) ...[
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "My Preferences in Roommates",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
+                      padding: EdgeInsets.fromLTRB(16, 32, 16, 8),
+                      child: Text(
+                        "My Preferences in Roommates",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
@@ -226,6 +269,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
                       value: myProfile!.roommatePreferenceSmoking ??
                           'Not specified',
                     ),
+
+                    buildRoomieSection(myProfile!),
                   ],
 
                   SizedBox(height: 40), // Space at the bottom

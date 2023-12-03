@@ -313,16 +313,7 @@ class ViewProfilePage extends StatelessWidget {
               : SizedBox(height: 250, child: Placeholder()),
         ),
         SizedBox(height: 30), // Space between roomie name and image
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.15),
-          child: Text(
-            userProfile.roomieBio ?? 'Roomie Bio',
-            style: TextStyle(fontSize: 16),
-            textAlign: TextAlign
-                .justify, //currently best way to allign roomie description
-          ),
-        ),
-        SizedBox(height: 30), // Space between roomie name and image
+        // SizedBox(height: 30), // Space between roomie name and image
         Padding(
           padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.15),
           child: Text(
