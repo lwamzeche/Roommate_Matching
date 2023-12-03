@@ -7,6 +7,7 @@ import 'package:roomie_project/main/my_profile.dart';
 import 'package:roomie_project/main/view_profile.dart';
 import 'matches.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'match_page.dart';
 
 class MyApp extends StatelessWidget {
   @override
@@ -301,6 +302,14 @@ class ProfileCard extends StatelessWidget {
         SnackBar(content: Text('Failed to add match: $error')),
       );
     });
+
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => MatchPage(
+        currentUserId: FirebaseAuth.instance.currentUser!.uid,
+        matchedUserId: profile.id,
+        matchPercentage: profile.matchPercentage,
+    ),
+  ));
   }
 
   @override
