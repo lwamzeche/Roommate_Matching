@@ -107,6 +107,33 @@ class _MatchesPageState extends State<MatchesPage> {
     }
   }
 
+  void _createOrGetChat(String matchedUserId, BuildContext context) {
+    List<String> ids = [currentUserId, matchedUserId];
+    ids.sort(); // Ensure consistent order for generating the chatId
+
+    String chatId =
+        ids.join('_'); // This creates a chatId by combining both user IDs
+
+    // Check Firestore for an existing chat document
+    _firestore.collection('chats').doc(chatId).get().then((chatDoc) {
+      if (!chatDoc.exists) {
+        // Chat doesn't exist, create a new chat document
+        _firestore.collection('chats').doc(chatId).set({
+          'userIds': ids,
+          'timestamp': FieldValue.serverTimestamp(),
+        });
+      }
+      // Navigate to the chat screen
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              ChatScreen(chatId: chatId, currentUserId: currentUserId),
+        ),
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -149,7 +176,7 @@ class _MatchesPageState extends State<MatchesPage> {
                     Text('Match: ${match.matchPercentage.toStringAsFixed(0)}%'),
                 trailing: ElevatedButton(
                   onPressed: () {
-                    // handle the chat logic here
+                    _createOrGetChat(match.documentId, context);
                   },
                   child: Text('Chat'),
                 ),
