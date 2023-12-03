@@ -28,19 +28,19 @@ class _UserTypeScreenState extends State<UserTypeScreen> {
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => GenderScreen(currentUser: widget.currentUser)),
-              );
-            },
-            child: Text(
-              'Skip',
-              style: TextStyle(color: Colors.blue),
-            ),
-          )
-        ],
+        // actions: <Widget>[
+        //   TextButton(
+        //     onPressed: () {
+        //       Navigator.of(context).push(
+        //         MaterialPageRoute(builder: (context) => GenderScreen(currentUser: widget.currentUser)),
+        //       );
+        //     },
+        //     child: Text(
+        //       'Take it Later',
+        //       style: TextStyle(color: Colors.blue),
+        //     ),
+        //   )
+        // ],
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.1),

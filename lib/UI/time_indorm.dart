@@ -72,7 +72,7 @@ class _TimeInDormState extends State<TimeInDorm> {
                     builder: (context) => Nationality(currentUser: widget.currentUser)),
               );
             },
-            child: Text('Skip', style: TextStyle(color: Colors.black)),
+            child: Text('Take it Later', style: TextStyle(color: Colors.blue)),
           ),
         ],
       ),

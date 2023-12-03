@@ -139,6 +139,8 @@ class _MainPageState extends State<MainPage> {
 class ProfileCard extends StatelessWidget {
   final UserProfile profile;
 
+  ProfileCard({required this.profile});
+
   void _navigateToProfile(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -147,17 +149,12 @@ class ProfileCard extends StatelessWidget {
     );
   }
 
-  // Function to handle the connect action
   void _connectWithThem(BuildContext context) {
-    // TODO: Implement the logic to add this profile to the matched page
     print('Connect with ${profile.name}');
   }
 
-  ProfileCard({required this.profile});
-
   @override
   Widget build(BuildContext context) {
-    // Determine the size of the screen for responsive layout
     final Size screenSize = MediaQuery.of(context).size;
 
     return Card(
@@ -168,33 +165,24 @@ class ProfileCard extends StatelessWidget {
         onTap: () => _navigateToProfile(context),
         child: Stack(
           children: [
-            // Image
             ClipRRect(
               borderRadius: BorderRadius.circular(10.0),
               child: Image.network(
                 profile.imageUrl ?? 'https://via.placeholder.com/150',
                 width: double.infinity,
-                height: screenSize.height * 0.7, // 60% of the screen height
+                height: screenSize.height * 0.7,
                 fit: BoxFit.cover,
               ),
             ),
             Positioned(
-              top: 16, // Adjust the positioning as needed
-              right: 16, // Adjust the positioning as needed
+              top: 16,
+              right: 16,
               child: InkWell(
-                onTap: () {
-                  // TODO: Navigate to the full profile view
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          ViewProfilePage(userProfile: profile),
-                    ),
-                  );
-                },
+                onTap: () => _navigateToProfile(context),
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   decoration: BoxDecoration(
-                    color: Colors.blue, // Use your brand color
+                    color: Colors.blue,
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
@@ -208,35 +196,32 @@ class ProfileCard extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
-                        Icons.unfold_more, // Replace with a suitable icon
+                        Icons.unfold_more,
                         color: Colors.white,
                         size: 18,
                       ),
-                      SizedBox(width: 1),
+                      SizedBox(width: 4),
+                      Text(
+                        "match percentage is not defined",
+                        // "Match: ${(profile.matchPercentage * 100).toStringAsFixed(0)}%",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ],
                   ),
                 ),
               ),
             ),
-
-            // Blue information box
             Positioned(
               left: 0,
               right: 0,
-              bottom: 0, // Align with the bottom of the card
+              bottom: 0,
               child: GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          ViewProfilePage(userProfile: profile),
-                    ),
-                  );
-                },
+                onTap: () => _navigateToProfile(context),
                 child: Container(
-                  padding: EdgeInsets.symmetric(
-                      horizontal:
-                          10.0), // Horizontal padding for the entire blue box
+                  padding: EdgeInsets.symmetric(horizontal: 10.0),
                   decoration: BoxDecoration(
                     color: Colors.blue.withOpacity(0.9),
                     borderRadius: BorderRadius.circular(10.0),
@@ -245,12 +230,10 @@ class ProfileCard extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Padding(
-                        padding: EdgeInsets.all(
-                            16.0), // Padding for the text elements
+                        padding: EdgeInsets.all(16.0),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            // Centered Row for Name and Age
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -263,24 +246,16 @@ class ProfileCard extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            SizedBox(
-                                height:
-                                    2), // Space between name/age and department
-                            // Department Text with smaller font
+                            SizedBox(height: 2),
                             Text(
                               profile.department ?? 'Department: Unavailable',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize:
-                                      16), // Smaller font size for department
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 16),
                             ),
-                            SizedBox(
-                                height:
-                                    16), // Space between department and attributes
-                            // Attributes Row
+                            SizedBox(height: 16),
                             Wrap(
                               alignment: WrapAlignment.start,
-                              spacing: 8.0, // Space between chips
+                              spacing: 8.0,
                               children: [
                                 Chip(
                                   label:
@@ -305,26 +280,21 @@ class ProfileCard extends StatelessWidget {
                           ],
                         ),
                       ),
-                      // Connect with them button
                       ElevatedButton(
                         onPressed: () => _connectWithThem(context),
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.white, // Button color
-                          onPrimary: Colors.blue, // Text color
+                          primary: Colors.white,
+                          onPrimary: Colors.blue,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                          ),
+                              borderRadius: BorderRadius.circular(30.0)),
                           elevation: 0,
                           padding: EdgeInsets.symmetric(
-                              horizontal: 30.0,
-                              vertical: 8.0), // Button padding
-                          textStyle: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
+                              horizontal: 30.0, vertical: 8.0),
+                          textStyle: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         child: Text('Connect with them'),
                       ),
-                      SizedBox(height: 16), // Space below the button
+                      SizedBox(height: 16),
                     ],
                   ),
                 ),
@@ -372,3 +342,204 @@ class UserProfile {
     this.roomieBio,
   });
 }
+
+// class ProfileCard extends StatelessWidget {
+//   final UserProfile profile;
+//
+//   void _navigateToProfile(BuildContext context) {
+//     Navigator.of(context).push(
+//       MaterialPageRoute(
+//         builder: (context) => ViewProfilePage(userProfile: profile),
+//       ),
+//     );
+//   }
+//
+//   // Function to handle the connect action
+//   void _connectWithThem(BuildContext context) {
+//     // TODO: Implement the logic to add this profile to the matched page
+//     print('Connect with ${profile.name}');
+//   }
+//
+//   ProfileCard({required this.profile});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     // Determine the size of the screen for responsive layout
+//     final Size screenSize = MediaQuery.of(context).size;
+//
+//     return Card(
+//       elevation: 8.0,
+//       margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+//       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+//       child: InkWell(
+//         onTap: () => _navigateToProfile(context),
+//         child: Stack(
+//           children: [
+//             // Image
+//             ClipRRect(
+//               borderRadius: BorderRadius.circular(10.0),
+//               child: Image.network(
+//                 profile.imageUrl ?? 'https://via.placeholder.com/150',
+//                 width: double.infinity,
+//                 height: screenSize.height * 0.7, // 60% of the screen height
+//                 fit: BoxFit.cover,
+//               ),
+//             ),
+//             Positioned(
+//               top: 16, // Adjust the positioning as needed
+//               right: 16, // Adjust the positioning as needed
+//               child: InkWell(
+//                 onTap: () {
+//                   // TODO: Navigate to the full profile view
+//                   Navigator.of(context).push(
+//                     MaterialPageRoute(
+//                       builder: (context) =>
+//                           ViewProfilePage(userProfile: profile),
+//                     ),
+//                   );
+//                 },
+//                 child: Container(
+//                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+//                   decoration: BoxDecoration(
+//                     color: Colors.blue, // Use your brand color
+//                     borderRadius: BorderRadius.circular(20),
+//                     boxShadow: [
+//                       BoxShadow(
+//                         color: Colors.black26,
+//                         blurRadius: 4,
+//                         offset: Offset(0, 2),
+//                       ),
+//                     ],
+//                   ),
+//                   child: Row(
+//                     mainAxisSize: MainAxisSize.min,
+//                     children: [
+//                       Icon(
+//                         Icons.unfold_more, // Replace with a suitable icon
+//                         color: Colors.white,
+//                         size: 18,
+//                       ),
+//                       SizedBox(width: 1),
+//                     ],
+//                   ),
+//                 ),
+//               ),
+//             ),
+//
+//             // Blue information box
+//             Positioned(
+//               left: 0,
+//               right: 0,
+//               bottom: 0, // Align with the bottom of the card
+//               child: GestureDetector(
+//                 onTap: () {
+//                   Navigator.of(context).push(
+//                     MaterialPageRoute(
+//                       builder: (context) =>
+//                           ViewProfilePage(userProfile: profile),
+//                     ),
+//                   );
+//                 },
+//                 child: Container(
+//                   padding: EdgeInsets.symmetric(
+//                       horizontal:
+//                           10.0), // Horizontal padding for the entire blue box
+//                   decoration: BoxDecoration(
+//                     color: Colors.blue.withOpacity(0.9),
+//                     borderRadius: BorderRadius.circular(10.0),
+//                   ),
+//                   child: Column(
+//                     mainAxisSize: MainAxisSize.min,
+//                     children: [
+//                       Padding(
+//                         padding: EdgeInsets.all(
+//                             16.0), // Padding for the text elements
+//                         child: Column(
+//                           mainAxisSize: MainAxisSize.min,
+//                           children: [
+//                             // Centered Row for Name and Age
+//                             Row(
+//                               mainAxisAlignment: MainAxisAlignment.center,
+//                               children: [
+//                                 Text(
+//                                   '${profile.name ?? 'Unavailable'}, ${profile.age ?? 'N/A'} yrs',
+//                                   style: TextStyle(
+//                                       fontSize: 18,
+//                                       fontWeight: FontWeight.bold,
+//                                       color: Colors.white),
+//                                 ),
+//                               ],
+//                             ),
+//                             SizedBox(
+//                                 height:
+//                                     2), // Space between name/age and department
+//                             // Department Text with smaller font
+//                             Text(
+//                               profile.department ?? 'Department: Unavailable',
+//                               style: TextStyle(
+//                                   color: Colors.white,
+//                                   fontSize:
+//                                       16), // Smaller font size for department
+//                             ),
+//                             SizedBox(
+//                                 height:
+//                                     16), // Space between department and attributes
+//                             // Attributes Row
+//                             Wrap(
+//                               alignment: WrapAlignment.start,
+//                               spacing: 8.0, // Space between chips
+//                               children: [
+//                                 Chip(
+//                                   label:
+//                                       Text(profile.mbti ?? 'MBTI: Unavailable'),
+//                                   labelStyle: TextStyle(color: Colors.white),
+//                                   backgroundColor: Colors.blue.shade300,
+//                                 ),
+//                                 Chip(
+//                                   label: Text(profile.dormitory ??
+//                                       'Dormitory: Unavailable'),
+//                                   labelStyle: TextStyle(color: Colors.white),
+//                                   backgroundColor: Colors.blue.shade300,
+//                                 ),
+//                                 Chip(
+//                                   label: Text(profile.userType ??
+//                                       'User Type: Unavailable'),
+//                                   labelStyle: TextStyle(color: Colors.white),
+//                                   backgroundColor: Colors.blue.shade300,
+//                                 ),
+//                               ],
+//                             ),
+//                           ],
+//                         ),
+//                       ),
+//                       // Connect with them button
+//                       ElevatedButton(
+//                         onPressed: () => _connectWithThem(context),
+//                         style: ElevatedButton.styleFrom(
+//                           primary: Colors.white, // Button color
+//                           onPrimary: Colors.blue, // Text color
+//                           shape: RoundedRectangleBorder(
+//                             borderRadius: BorderRadius.circular(30.0),
+//                           ),
+//                           elevation: 0,
+//                           padding: EdgeInsets.symmetric(
+//                               horizontal: 30.0,
+//                               vertical: 8.0), // Button padding
+//                           textStyle: TextStyle(
+//                             fontWeight: FontWeight.bold,
+//                           ),
+//                         ),
+//                         child: Text('Connect with them'),
+//                       ),
+//                       SizedBox(height: 16), // Space below the button
+//                     ],
+//                   ),
+//                 ),
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }

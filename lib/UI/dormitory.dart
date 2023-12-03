@@ -4,7 +4,6 @@ import './mbti.dart';
 import './firestore_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-
 class DormitoryScreen extends StatefulWidget {
   final User currentUser;
   DormitoryScreen({required this.currentUser});
@@ -28,20 +27,20 @@ class _DormitoryScreenState extends State<DormitoryScreen> {
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => MBTIScreen(currentUser: widget.currentUser!)),
-              );
-              // TODO: Implement skip functionality
-            },
-            child: Text(
-              'Skip',
-              style: TextStyle(color: Colors.blue),
-            ),
-          )
-        ],
+        // actions: <Widget>[
+        //   TextButton(
+        //     onPressed: () {
+        //       Navigator.of(context).push(
+        //         MaterialPageRoute(builder: (context) => MBTIScreen(currentUser: widget.currentUser!)),
+        //       );
+        //       // TODO: Implement skip functionality
+        //     },
+        //     child: Text(
+        //       'Skip',
+        //       style: TextStyle(color: Colors.blue),
+        //     ),
+        //   )
+        // ],
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.1),
@@ -51,7 +50,7 @@ class _DormitoryScreenState extends State<DormitoryScreen> {
           children: <Widget>[
             SizedBox(height: screenSize.height * 0.05),
             Text(
-              'Select your dormitory',
+              'Select your preferable dormitory',
               style: TextStyle(
                 fontSize: screenSize.width * 0.08, // Responsive font size
                 fontWeight: FontWeight.bold,
@@ -67,19 +66,19 @@ class _DormitoryScreenState extends State<DormitoryScreen> {
                 });
               },
               items: <String>[
-                'Sarang Hall',
-                'Somang Hall',
-                'Silloe Hall',
-                'Areum Hall',
-                'Dasom Hall',
-                'Jihye Hall',
-                'Heemang Hall',
-                'Sejong Hall',
-                'Mir Hall',
-                'Jilli Hall',
-                'Munji Hall',
-                'Hwaam Hall',
-                'Seonhsil Hall',
+                'Sarang',
+                'Somang',
+                'Silloe',
+                'Areum',
+                'Dasom',
+                'Jihye',
+                'Heemang',
+                'Sejong',
+                'Mir',
+                'Jilli',
+                'Munji',
+                'Hwaam',
+                'Seongsil',
               ].map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
@@ -95,10 +94,14 @@ class _DormitoryScreenState extends State<DormitoryScreen> {
             ElevatedButton(
               onPressed: () {
                 if (widget.currentUser?.uid != null) {
-                  FirestoreService.updateUserData(widget.currentUser.uid, "Dormitory", _selectedGender?? 'N/A');
+                  String dormitoryName = _selectedGender!.split(' ')[0];
+                  FirestoreService.updateUserData(
+                      widget.currentUser.uid, "Dormitory", dormitoryName);
                 }
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => MBTIScreen(currentUser: widget.currentUser!)),
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          MBTIScreen(currentUser: widget.currentUser!)),
                 );
               },
               style: ElevatedButton.styleFrom(
