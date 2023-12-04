@@ -288,9 +288,9 @@ class ProfileCard extends StatelessWidget {
           'matchPercentage':
               matchPercentages // Update the array of match percentages
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Match with $user2Id added successfully')),
-        );
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(content: Text('Match with $user2Id added successfully')),
+        // );
       } else {
         // If user2Id is already in the list, show a pop-up message
         ScaffoldMessenger.of(context).showSnackBar(
@@ -308,8 +308,8 @@ class ProfileCard extends StatelessWidget {
         currentUserId: FirebaseAuth.instance.currentUser!.uid,
         matchedUserId: profile.id,
         matchPercentage: profile.matchPercentage,
-    ),
-  ));
+      ),
+    ));
   }
 
   @override
