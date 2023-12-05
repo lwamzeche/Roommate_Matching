@@ -16,11 +16,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _departmentController = TextEditingController();
   final TextEditingController _bioController = TextEditingController();
+  final TextEditingController _dormitoryController = TextEditingController();
 
   String? _currentName;
   String? _currentAge;
   String? _currentDepartment;
   String? _currentBio;
+  String? _currentDormitory;
 
   @override
   void initState() {
@@ -43,6 +45,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           _currentAge = data['Age'].toString();
           _currentDepartment = data['Department'];
           _currentBio = data['Bio'];
+          _currentDormitory = data['Dormitory'];
         });
       }
     } catch (e) {
@@ -64,6 +67,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
     if (_bioController.text.isNotEmpty && _bioController.text != _currentBio) {
       updatedData['Bio'] = _bioController.text;
+    }
+    if (_dormitoryController.text.isNotEmpty && _dormitoryController.text != _currentDormitory) {
+      updatedData['Dormitory'] = _dormitoryController.text;
     }
 
     if (updatedData.isNotEmpty) {
@@ -111,6 +117,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
               decoration: InputDecoration(
                 labelText: 'Department',
                 hintText: _currentDepartment,
+                hintStyle: TextStyle(color: Colors.grey),
+              ),
+            ),
+            TextField(
+              controller: _dormitoryController,
+              decoration: InputDecoration(
+                labelText: 'Dormitory',
+                hintText: _currentDormitory,
                 hintStyle: TextStyle(color: Colors.grey),
               ),
             ),
