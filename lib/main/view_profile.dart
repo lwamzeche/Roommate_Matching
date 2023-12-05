@@ -252,7 +252,6 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
         ),
 
         SizedBox(height: 16),
-        Divider(),
       ],
     );
   }
