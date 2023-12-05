@@ -124,6 +124,7 @@ class _MainPageState extends State<MainPage> {
           roomieImage: data['roomieImage'],
           roomieName: data['roomieName'],
           roomieBio: data['roomieBio'],
+          roomieDescription: data['roomieDescription'],
           preferenceNationality: data['roommatePreferenceNationality'],
           matchPercentage: 0.0, // Initial match percentage set to 0.0
         );
@@ -476,6 +477,7 @@ class UserProfile {
   final String? roomieImage;
   final String? roomieName;
   final String? roomieBio;
+  final String? roomieDescription;
   final String? preferenceNationality;
   final String? gamingHabit;
   final String id;
@@ -497,6 +499,7 @@ class UserProfile {
     this.roomieImage,
     this.roomieName,
     this.roomieBio,
+    this.roomieDescription,
     this.preferenceNationality,
     required this.id,
     this.matchPercentage = 0.0,
