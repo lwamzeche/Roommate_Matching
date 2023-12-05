@@ -43,6 +43,49 @@ class _MyProfilePageState extends State<MyProfilePage> {
     }
   }
 
+  Widget _buildDetailsSection() {
+    return Padding(
+      padding: EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text('All about Me',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          SizedBox(height: 8), // Added space
+        ],
+      ),
+    );
+  }
+
+   Widget _buildLabel(String text) {
+    return Chip(
+      label: Text(
+        text,
+        style: TextStyle(
+          color: Colors.blue,
+          fontSize: 16, // Increased font size
+        ),
+      ),
+      backgroundColor: Colors.white,
+      shape: StadiumBorder(side: BorderSide(color: Colors.blue)),
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+    );
+  }
+
+  Widget _buildLabelsSection() {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Wrap(
+        spacing: 8.0,
+        children: <Widget>[
+          _buildLabel(myProfile!.mbti ?? 'MBTI: Unavailable'),
+          _buildLabel(myProfile!.dormitory ?? 'Dormitory: Unavailable'),
+          _buildLabel(myProfile!.userType ?? 'User Type: Unavailable'),
+        ],
+      ),
+    );
+  }
+
   Widget buildRoomieSection(MyProfile profile) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,7 +121,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
           padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.2),
           child: Text(
-            profile.roomieBio ?? 'N/A',
+            profile.roomieDescription ?? 'N/A',
             textAlign: TextAlign.justify,
             style: TextStyle(
               fontSize: 16,
@@ -127,6 +170,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
             Map<String, dynamic> roomieData =
                 roomieDoc.data() as Map<String, dynamic>;
             roomieBio = roomieData['roomieBio'] ?? 'N/A';
+            roomieDescription = roomieData['roomieDescription'] ?? 'N/A';
           }
         }
 
@@ -137,7 +181,10 @@ class _MyProfilePageState extends State<MyProfilePage> {
             age: data['Age'].toString(),
             imageUrl: data['ImageUrl'],
             bio: data['Bio'],
+            mbti: data['MBTI'],
+            userType: data['User Type'],
             department: data['Department'],
+            dormitory: data['Dormitory'],
             roommatePreferenceDormTime: data['roommatePreferenceDormTime'],
             roommatePreferenceGaming: data['roommatePreferenceGaming'],
             roommatePreferenceNationality:
@@ -147,6 +194,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
             roomieName: roomieName,
             roomieImage: data['roomieImage'],
             roomieBio: roomieBio, // Set the roomieBio from roomieInfo.
+            roomieDescription: roomieDescription,
           );
         });
       } else {
@@ -260,6 +308,10 @@ class _MyProfilePageState extends State<MyProfilePage> {
                       ),
                   SizedBox(height: 16), // Space before preferences heading
                   Divider(), // Spacer to push the preferences to the top
+                  _buildDetailsSection(),
+                  _buildLabelsSection(),
+                  Divider(), // Spacer to push the preferences to the top
+
                   if (myProfile != null) ...[
                     Padding(
                       padding: EdgeInsets.fromLTRB(16, 32, 16, 8),
@@ -424,10 +476,14 @@ class MyProfile {
   final String? age;
   final String? imageUrl;
   final String? bio;
+  final String? mbti;
+  final String? userType;
   final String? department;
+  final String? dormitory;
   final String? roomieName;
   final String? roomieImage;
   final String? roomieBio;
+  final String? roomieDescription;
   final String? roommatePreferenceDormTime;
   final String? roommatePreferenceGaming;
   final String? roommatePreferenceNationality;
@@ -440,9 +496,13 @@ class MyProfile {
     this.imageUrl,
     this.bio,
     this.department,
+    this.userType,
+    this.mbti,
+    this.dormitory,
     this.roomieName,
     this.roomieImage,
     this.roomieBio,
+    this.roomieDescription,
     this.roommatePreferenceDormTime,
     this.roommatePreferenceGaming,
     this.roommatePreferenceNationality,
