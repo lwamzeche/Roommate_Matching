@@ -117,11 +117,18 @@ class _MyProfilePageState extends State<MyProfilePage> {
                     height: 200)) // Adjust the height as needed
             : Icon(Icons.account_circle, size: 200), // Placeholder icon
         SizedBox(height: 20),
+        Center(
+            child: Text(
+              profile.roomieDescription ?? 'N/A',
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.blue),
+            ),
+        ),
+        SizedBox(height: 20), // Space between image and description
         Padding(
           padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.2),
           child: Text(
-            profile.roomieDescription ?? 'N/A',
+            profile.roomieBio ?? 'N/A',
             textAlign: TextAlign.justify,
             style: TextStyle(
               fontSize: 16,
@@ -157,6 +164,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
 
         // Initialize roomieBio to 'N/A'.
         String roomieBio = 'N/A';
+        String roomieDescription = 'N/A';
 
         // If roomieName is provided, fetch roomieBio from roomieInfo.
         if (roomieName != null && roomieName.isNotEmpty) {
