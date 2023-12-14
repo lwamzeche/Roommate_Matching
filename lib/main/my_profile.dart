@@ -43,6 +43,49 @@ class _MyProfilePageState extends State<MyProfilePage> {
     }
   }
 
+  Widget _buildDetailsSection() {
+    return Padding(
+      padding: EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text('All about Me',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          SizedBox(height: 8), // Added space
+        ],
+      ),
+    );
+  }
+
+   Widget _buildLabel(String text) {
+    return Chip(
+      label: Text(
+        text,
+        style: TextStyle(
+          color: Colors.blue,
+          fontSize: 16, // Increased font size
+        ),
+      ),
+      backgroundColor: Colors.white,
+      shape: StadiumBorder(side: BorderSide(color: Colors.blue)),
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+    );
+  }
+
+  Widget _buildLabelsSection() {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Wrap(
+        spacing: 8.0,
+        children: <Widget>[
+          _buildLabel(myProfile!.mbti ?? 'MBTI: Unavailable'),
+          _buildLabel(myProfile!.dormitory ?? 'Dormitory: Unavailable'),
+          _buildLabel(myProfile!.userType ?? 'User Type: Unavailable'),
+        ],
+      ),
+    );
+  }
+
   Widget buildRoomieSection(MyProfile profile) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,18 +110,26 @@ class _MyProfilePageState extends State<MyProfilePage> {
             ),
           ),
         ),
-        SizedBox(height: 16),
+        SizedBox(height: 20),
         profile.roomieImage != null
             ? Center(
                 child: Image.network(profile.roomieImage!,
                     height: 200)) // Adjust the height as needed
             : Icon(Icons.account_circle, size: 200), // Placeholder icon
+        SizedBox(height: 20),
+        Center(
+            child: Text(
+              profile.roomieDescription ?? 'N/A',
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.blue),
+            ),
+        ),
+        SizedBox(height: 20), // Space between image and description
         Padding(
           padding: EdgeInsets.symmetric(
-              horizontal: MediaQuery.of(context).size.width * 0.15),
+              horizontal: MediaQuery.of(context).size.width * 0.2),
           child: Text(
             profile.roomieBio ?? 'N/A',
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.justify,
             style: TextStyle(
               fontSize: 16,
               height: 1.5,
@@ -113,6 +164,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
 
         // Initialize roomieBio to 'N/A'.
         String roomieBio = 'N/A';
+        String roomieDescription = 'N/A';
 
         // If roomieName is provided, fetch roomieBio from roomieInfo.
         if (roomieName != null && roomieName.isNotEmpty) {
@@ -126,6 +178,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
             Map<String, dynamic> roomieData =
                 roomieDoc.data() as Map<String, dynamic>;
             roomieBio = roomieData['roomieBio'] ?? 'N/A';
+            roomieDescription = roomieData['roomieDescription'] ?? 'N/A';
           }
         }
 
@@ -136,7 +189,10 @@ class _MyProfilePageState extends State<MyProfilePage> {
             age: data['Age'].toString(),
             imageUrl: data['ImageUrl'],
             bio: data['Bio'],
+            mbti: data['MBTI'],
+            userType: data['User Type'],
             department: data['Department'],
+            dormitory: data['Dormitory'],
             roommatePreferenceDormTime: data['roommatePreferenceDormTime'],
             roommatePreferenceGaming: data['roommatePreferenceGaming'],
             roommatePreferenceNationality:
@@ -146,6 +202,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
             roomieName: roomieName,
             roomieImage: data['roomieImage'],
             roomieBio: roomieBio, // Set the roomieBio from roomieInfo.
+            roomieDescription: roomieDescription,
           );
         });
       } else {
@@ -248,6 +305,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                             child: Text(
                               myProfile!.bio ?? 'No Bio',
                               style: TextStyle(fontSize: 16),
+                              
                             ),
                           ),
                         ],
@@ -256,26 +314,35 @@ class _MyProfilePageState extends State<MyProfilePage> {
                       //   myProfile!.bio ?? 'No Bio',
                       //   style: TextStyle(fontSize: 16),
                       ),
+                  SizedBox(height: 16), // Space before preferences heading
+                  Divider(), // Spacer to push the preferences to the top
+                  _buildDetailsSection(),
+                  _buildLabelsSection(),
+                  Divider(), // Spacer to push the preferences to the top
+
                   if (myProfile != null) ...[
                     Padding(
                       padding: EdgeInsets.fromLTRB(16, 32, 16, 8),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
                       child: Text(
                         "My Preferences in Roommates",
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
+                      ),
                       ),
                     ),
                     SizedBox(height: 8),
                     PreferencesWidget(
-                      title: 'DormTime Preference:',
+                      title: 'Time in Dorm',
                       value: myProfile!.roommatePreferenceDormTime ??
                           'Not specified',
                     ),
                     // Repeat this for each preference you want to show
                     PreferencesWidget(
-                      title: 'Gaming Preference:',
+                      title: 'Gaming',
                       value: myProfile!.roommatePreferenceGaming ??
                           'Not specified',
                     ),
@@ -285,20 +352,22 @@ class _MyProfilePageState extends State<MyProfilePage> {
                           'Not specified',
                     ),
                     PreferencesWidget(
-                      title: 'SleepingHabit Preference',
+                      title: 'Sleeping Habit',
                       value:
                           myProfile!.roommatePreferenceSleep ?? 'Not Specified',
                     ),
                     PreferencesWidget(
-                      title: 'SmokingHabit Preference',
+                      title: 'Smoking Habit',
                       value: myProfile!.roommatePreferenceSmoking ??
                           'Not specified',
                     ),
-
+                    SizedBox(height: 16), // Space before roomie section
+                    Divider(), // Spacer to push the preferences to the top
                     buildRoomieSection(myProfile!),
                   ],
 
-                  SizedBox(height: 40), // Space at the bottom
+                  SizedBox(height: 20), // Space at the bottom
+                  Divider(), // Spacer to push the preferences to the top
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16),
                     child: Row(
@@ -415,10 +484,14 @@ class MyProfile {
   final String? age;
   final String? imageUrl;
   final String? bio;
+  final String? mbti;
+  final String? userType;
   final String? department;
+  final String? dormitory;
   final String? roomieName;
   final String? roomieImage;
   final String? roomieBio;
+  final String? roomieDescription;
   final String? roommatePreferenceDormTime;
   final String? roommatePreferenceGaming;
   final String? roommatePreferenceNationality;
@@ -431,9 +504,13 @@ class MyProfile {
     this.imageUrl,
     this.bio,
     this.department,
+    this.userType,
+    this.mbti,
+    this.dormitory,
     this.roomieName,
     this.roomieImage,
     this.roomieBio,
+    this.roomieDescription,
     this.roommatePreferenceDormTime,
     this.roommatePreferenceGaming,
     this.roommatePreferenceNationality,

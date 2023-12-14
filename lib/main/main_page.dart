@@ -7,6 +7,7 @@ import 'package:roomie_project/main/my_profile.dart';
 import 'package:roomie_project/main/view_profile.dart';
 import 'matches.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'match_page.dart';
 
 class MyApp extends StatelessWidget {
   @override
@@ -119,9 +120,11 @@ class _MainPageState extends State<MainPage> {
           sleepingHabit: data['roommatePreferenceSleep'],
           timeInDorm: data['roommatePreferenceDormTime'],
           smokingHabit: data['roommatePreferenceSmoking'],
+          gamingHabit: data['roommatePreferenceGaming'],
           roomieImage: data['roomieImage'],
           roomieName: data['roomieName'],
           roomieBio: data['roomieBio'],
+          roomieDescription: data['roomieDescription'],
           preferenceNationality: data['roommatePreferenceNationality'],
           matchPercentage: 0.0, // Initial match percentage set to 0.0
         );
@@ -286,9 +289,9 @@ class ProfileCard extends StatelessWidget {
           'matchPercentage':
               matchPercentages // Update the array of match percentages
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Match with $user2Id added successfully')),
-        );
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(content: Text('Match with $user2Id added successfully')),
+        // );
       } else {
         // If user2Id is already in the list, show a pop-up message
         ScaffoldMessenger.of(context).showSnackBar(
@@ -300,6 +303,14 @@ class ProfileCard extends StatelessWidget {
         SnackBar(content: Text('Failed to add match: $error')),
       );
     });
+
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => MatchPage(
+        currentUserId: FirebaseAuth.instance.currentUser!.uid,
+        matchedUserId: profile.id,
+        matchPercentage: profile.matchPercentage,
+      ),
+    ));
   }
 
   @override
@@ -466,7 +477,9 @@ class UserProfile {
   final String? roomieImage;
   final String? roomieName;
   final String? roomieBio;
+  final String? roomieDescription;
   final String? preferenceNationality;
+  final String? gamingHabit;
   final String id;
   double matchPercentage;
 
@@ -486,9 +499,11 @@ class UserProfile {
     this.roomieImage,
     this.roomieName,
     this.roomieBio,
+    this.roomieDescription,
     this.preferenceNationality,
     required this.id,
     this.matchPercentage = 0.0,
+    this.gamingHabit,
   });
 
   factory UserProfile.fromDocument(DocumentSnapshot doc) {

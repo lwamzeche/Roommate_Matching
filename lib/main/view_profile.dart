@@ -3,16 +3,58 @@
 import 'package:flutter/material.dart';
 import 'main_page.dart';
 import 'dart:io' show Platform;
+import 'my_profile.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class ViewProfilePage extends StatelessWidget {
+
+class ViewProfilePage extends StatefulWidget {
   final UserProfile userProfile;
 
-  // ViewProfilePage({Key? key, required this.userProfile}) : super(key: key);
+  ViewProfilePage({Key? key, required this.userProfile}) : super(key: key);
 
-  ViewProfilePage({Key? key, required this.userProfile}) : super(key: key) {
-    print("User Profile Details:");
-    print("Name: ${userProfile.name}");
-    print("Bio: ${userProfile.smokingHabit}");
+  @override
+  _ViewProfilePageState createState() => _ViewProfilePageState();
+}
+// class ViewProfilePage extends StatelessWidget {
+class _ViewProfilePageState extends State<ViewProfilePage> {
+  // final UserProfile userProfile;
+  // ViewProfilePage({Key? key, required this.userProfile}) : super(key: key) {
+  //   print("User Profile Details:");
+  //   print("Name: ${userProfile.name}");
+  //   print("Bio: ${userProfile.smokingHabit}");
+  // }
+  String? roomieBio;
+  String? roomieDescription;
+  String? roomieImage;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchRoomieInfo(widget.userProfile.roomieName);
+  }
+
+  Future<void> fetchRoomieInfo(String? roomieName) async {
+    if (roomieName != null && roomieName.isNotEmpty) {
+      try {
+        DocumentSnapshot roomieDoc = await FirebaseFirestore.instance
+            .collection('roomieInfo')
+            .doc(roomieName)
+            .get();
+
+        if (roomieDoc.exists) {
+          Map<String, dynamic> roomieData =
+              roomieDoc.data() as Map<String, dynamic>;
+          setState(() {
+            roomieBio = roomieData['roomieBio'];
+            roomieDescription = roomieData['roomieDescription'];
+            roomieImage = roomieData['roomieImage'];
+          });
+        }
+      } catch (e) {
+        print("Error fetching roomie info: $e");
+      }
+    }
   }
 
   @override
@@ -34,11 +76,10 @@ class ViewProfilePage extends StatelessWidget {
             _buildDetailsSection(),
             _buildLabelsSection(),
             Divider(),
+            _buildRoommatePreferencesSection(widget.userProfile),
+            Divider(),
             _buildRoomieHeading(),
             _buildRoomieSection(context, screenSize),
-            Divider(),
-            _buildRoommatePreferencesSection(),
-            _buildPreferencesSection(),
           ],
         ),
       ),
@@ -51,7 +92,7 @@ class ViewProfilePage extends StatelessWidget {
       alignment: Alignment.bottomCenter,
       children: [
         Image.network(
-          userProfile.imageUrl ?? 'https://via.placeholder.com/150',
+          widget.userProfile.imageUrl ?? 'https://via.placeholder.com/150',
           width: double.infinity,
           height: screenSize.height * 0.6,
           fit: BoxFit.cover,
@@ -68,14 +109,14 @@ class ViewProfilePage extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                '${userProfile.name ?? 'Unavailable'}, ${userProfile.age ?? 'N/A'} yrs',
+                '${widget.userProfile.name ?? 'Unavailable'}, ${widget.userProfile.age ?? 'N/A'} yrs',
                 style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: Colors.white),
               ),
               Text(
-                '${userProfile.department ?? 'N/A'}',
+                '${widget.userProfile.department ?? 'N/A'}',
                 style: TextStyle(color: Colors.white, fontSize: 16),
               ),
             ],
@@ -94,7 +135,7 @@ class ViewProfilePage extends StatelessWidget {
           Text('Bio',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
           SizedBox(height: 8), // Added space
-          Text(userProfile.bio ?? 'N/A'),
+          Text(widget.userProfile.bio ?? 'N/A'),
         ],
       ),
     );
@@ -106,7 +147,7 @@ class ViewProfilePage extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text('All about ${userProfile.name ?? 'User'}',
+          Text('All about ${widget.userProfile.name ?? 'User'}',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
           SizedBox(height: 8), // Added space
         ],
@@ -120,57 +161,9 @@ class ViewProfilePage extends StatelessWidget {
       child: Wrap(
         spacing: 8.0,
         children: <Widget>[
-          _buildLabel(userProfile.mbti ?? 'MBTI: Unavailable'),
-          _buildLabel(userProfile.dormitory ?? 'Dormitory: Unavailable'),
-          _buildLabel(userProfile.userType ?? 'User Type: Unavailable'),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRoommatePreferencesSection() {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(left: 16.0, top: 16.0),
-          child: Text(
-            // "Preferences in Roommates",
-            "${_getFirstName(userProfile.name)}'s Preference in Roommate",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildPreferencesSection() {
-    return Padding(
-      padding:
-          EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0, top: 10.0),
-      child: Column(
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Expanded(
-                  child: _buildLabel(
-                      userProfile.sleepingHabit ?? 'Sleeping Habit')),
-              SizedBox(width: 2), // Space between labels
-              Expanded(
-                  child: _buildLabel(userProfile.timeInDorm ?? 'Time in Dorm')),
-            ],
-          ),
-          SizedBox(height: 2), // Space between rows
-          Row(
-            children: <Widget>[
-              Expanded(
-                  child:
-                      _buildLabel(userProfile.smokingHabit ?? 'Smoking Habit')),
-              SizedBox(width: 2), // Space between labels
-              Expanded(
-                  child: _buildLabel(userProfile.userType ?? 'International')),
-            ],
-          ),
+          _buildLabel(widget.userProfile.mbti ?? 'MBTI: Unavailable'),
+          _buildLabel(widget.userProfile.dormitory ?? 'Dormitory: Unavailable'),
+          _buildLabel(widget.userProfile.userType ?? 'User Type: Unavailable'),
         ],
       ),
     );
@@ -206,10 +199,59 @@ class ViewProfilePage extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
           child: Text(
-            "${_getFirstName(userProfile.name)}'s Roomie",
+            "${_getFirstName(widget.userProfile.name)}'s Roomie",
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ),
+      ],
+    );
+  }
+
+   Widget _buildRoommatePreferencesSection(UserProfile myProfile) {
+    return Column(
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.fromLTRB(16, 32, 16, 8),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              // "${_getFirstName(myProfile.name)'s Preference in Roommate",
+              "${_getFirstName(widget.userProfile.name)}'s Preference in Roommate",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: 8),
+        PreferencesWidget(
+          title: 'Time in Dorm',
+          value: myProfile.timeInDorm ?? 'Not specified',
+        ),
+        SizedBox(height: 8),
+        PreferencesWidget(
+          title: 'Gaming',
+          value: myProfile!.gamingHabit ??
+              'Not specified',
+                    ),
+        SizedBox(height: 8),
+        PreferencesWidget(
+          title: 'Nationality',
+          value: myProfile.preferenceNationality ?? 'Not specified',
+        ),
+        SizedBox(height: 8),
+        PreferencesWidget(
+          title: 'Sleeping Habit',
+          value: myProfile.sleepingHabit ?? 'Not specified',
+        ),
+        SizedBox(height: 8),
+        PreferencesWidget(
+          title: 'Smoking Habit',
+          value: myProfile.smokingHabit ?? 'Not specified',
+        ),
+
+        SizedBox(height: 16),
       ],
     );
   }
@@ -221,7 +263,7 @@ class ViewProfilePage extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(left: 16.0, top: 16.0, right: 16.0),
           child: Text(
-            "${userProfile.roomieName ?? 'User'}",
+            "${widget.userProfile.roomieName ?? 'User'}",
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ),
@@ -229,24 +271,29 @@ class ViewProfilePage extends StatelessWidget {
         Container(
           width: MediaQuery.of(context).size.width * 0.9,
           padding: EdgeInsets.symmetric(horizontal: 16.0),
-          child: userProfile.roomieImage != null
+          child: widget.userProfile.roomieImage != null
               ? Image.network(
-                  userProfile.roomieImage!,
+                  roomieImage!,
                   fit: BoxFit.cover,
                 )
               : SizedBox(height: 250, child: Placeholder()),
         ),
         SizedBox(height: 30), // Space between roomie name and image
+        Text(
+              roomieDescription ?? 'Roomie Description',
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.blue),
+            ),
+        SizedBox(height: 15), // Space between image and description
         Padding(
           padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.15),
           child: Text(
-            userProfile.roomieBio ?? 'Roomie Bio',
+            roomieBio ?? 'Roomie Bio',
             style: TextStyle(fontSize: 16),
             textAlign:
-                TextAlign.center, // Align the roomie description to the center
+                TextAlign.justify, // Align the roomie description to the center
           ),
         ),
-        SizedBox(height: 10),
+        SizedBox(height: 50),
       ],
     );
   }
