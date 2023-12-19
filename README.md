@@ -3,7 +3,8 @@
 ## Overview
 This repository contains the source code for the Roommate Matching mobile application, developed using Flutter and Firebase. The app aims to connect individuals looking for roommates by matching profiles based on shared preferences and habits.
 ## Demo of our App
-https://youtu.be/OR6MOSfsgj0?si=0jfVfOA49nw5OpX3
+- https://youtu.be/OR6MOSfsgj0?si=0jfVfOA49nw5OpX3
+- https://youtu.be/EaD66UYiSmk?si=zoaKcf6jgaeZ6IUz
 ## Structure
 - `lib/main.dart`: The entry point of the application, initializing the Firebase app and running the main app widget.
 - `lib/main/main_page.dart`: Hosts the primary navigation, tab views and swappable cards.
